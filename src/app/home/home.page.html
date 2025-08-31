@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Inicio
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">SALIR</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <strong>¡Bienvenido, {{ username }}!</strong>
+  </div>
+</ion-content>
