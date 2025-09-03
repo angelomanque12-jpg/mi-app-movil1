@@ -1,16 +1,37 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Inicio
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">SALIR</ion-button>
-    </ion-buttons>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div id="container">
-    <strong>¡Bienvenido, {{ username }}!</strong>
+<ion-content class="home-background">
+  <div class="home-container">
+    <h2>¡Hola, {{ username }}!</h2>
+    <p>Bienvenido a tu aplicación</p>
+
+    <!-- Tarjeta Perfil -->
+    <ion-card (click)="goToPerfil()">
+      <ion-card-header>
+        <ion-card-title>👤 Perfil</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Ver y editar información de tu usuario.
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Tarjeta Configuración -->
+    <ion-card (click)="goToConfig()">
+      <ion-card-header>
+        <ion-card-title>⚙ Configuración</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Ajusta las preferencias de la aplicación.
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Cerrar sesión -->
+    <ion-button expand="block" color="danger" shape="round" (click)="logout()">
+      Cerrar sesión
+    </ion-button>
   </div>
 </ion-content>
