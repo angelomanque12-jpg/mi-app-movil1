@@ -8,8 +8,9 @@ import { UserService } from '../services/user.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'], 
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule] 
+  imports: [IonicModule, FormsModule, CommonModule]
 })
 export class LoginPage {
   username = '';
@@ -34,6 +35,10 @@ export class LoginPage {
   }
 
   onRegister() {
+    if (!this.newUsername || !this.newPassword) {
+      alert('Debe ingresar un usuario y contraseña');
+      return;
+    }
     if (this.userService.registerUser(this.newUsername, this.newPassword)) {
       alert('Usuario registrado correctamente');
       this.showRegister = false;
@@ -48,3 +53,5 @@ export class LoginPage {
     return this.userService.getUsername();
   }
 }
+
+

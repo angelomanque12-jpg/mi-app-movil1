@@ -1,35 +1,62 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Acceso</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="login-bg">
+  <div class="wrap">
+    <ion-card class="panel">
+      <ion-card-header>
+        <ion-img src="assets/logo.png" class="logo" alt="Logo"></ion-img>
+        <ion-card-title>{{ showRegister ? 'Crear cuenta' : 'Bienvenido' }}</ion-card-title>
+        <ion-card-subtitle>
+          {{ showRegister ? 'Regístrate para continuar' : 'Inicia sesión para continuar' }}
+        </ion-card-subtitle>
+      </ion-card-header>
 
-<ion-content [fullscreen]="true">
-  <div id="login-container">
-    <form *ngIf="!showRegister" (ngSubmit)="onSubmit()" #loginForm="ngForm">
-      <ion-item>
-        <ion-label position="floating">Usuario</ion-label>
-        <ion-input type="text" required [(ngModel)]="username" name="username"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Contraseña</ion-label>
-        <ion-input type="password" required [(ngModel)]="password" name="password"></ion-input>
-      </ion-item>
-      <ion-button expand="full" type="submit" [disabled]="!loginForm.form.valid">Iniciar sesión</ion-button>
-      <ion-button expand="full" fill="clear" (click)="showRegister = true">Registrarse</ion-button>
-    </form>
+      <ion-card-content>
 
-    <form *ngIf="showRegister" (ngSubmit)="onRegister()" #registerForm="ngForm">
-      <ion-item>
-        <ion-label position="floating">Nuevo usuario</ion-label>
-        <ion-input type="text" required [(ngModel)]="newUsername" name="newUsername"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Nueva contraseña</ion-label>
-        <ion-input type="password" required [(ngModel)]="newPassword" name="newPassword"></ion-input>
-      </ion-item>
-      <ion-button expand="full" type="submit" [disabled]="!registerForm.form.valid">Registrarse</ion-button>
-      <ion-button expand="full" fill="clear" (click)="showRegister = false">Volver</ion-button>
-    </form>
+        <!-- LOGIN -->
+        <form *ngIf="!showRegister" (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+          <ion-item class="input" lines="none">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="username" name="username" required type="text" placeholder="Usuario"></ion-input>
+          </ion-item>
+
+          <ion-item class="input" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="password" name="password" required type="password" placeholder="Contraseña"></ion-input>
+          </ion-item>
+
+          <ion-button expand="block" type="submit" class="btn-primary" [disabled]="!loginForm.form.valid">
+            Iniciar sesión
+          </ion-button>
+
+          <div class="switch">
+            ¿No tienes cuenta?
+            <button type="button" class="link" (click)="showRegister = true">Crear una</button>
+          </div>
+        </form>
+
+        <!-- REGISTRO -->
+        <form *ngIf="showRegister" (ngSubmit)="onRegister()" #registerForm="ngForm" novalidate>
+          <ion-item class="input" lines="none">
+            <ion-icon name="person-add-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="newUsername" name="newUsername" required type="text" placeholder="Nuevo usuario"></ion-input>
+          </ion-item>
+
+          <ion-item class="input" lines="none">
+            <ion-icon name="key-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="newPassword" name="newPassword" required type="password" placeholder="Nueva contraseña"></ion-input>
+          </ion-item>
+
+          <ion-button expand="block" type="submit" class="btn-success" [disabled]="!registerForm.form.valid">
+            Crear cuenta
+          </ion-button>
+
+          <div class="switch">
+            ¿Ya tienes cuenta?
+            <button type="button" class="link" (click)="showRegister = false">Iniciar sesión</button>
+          </div>
+        </form>
+
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
+
