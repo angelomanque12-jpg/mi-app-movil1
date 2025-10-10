@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -19,7 +19,8 @@ export class LoginPage {
   newUsername = '';
   newPassword = '';
 
-  constructor(private router: Router, private userService: UserService) {}
+  private router = inject(Router);
+  private userService = inject(UserService);
 
   onSubmit() {
     if (!this.userService.getUserExists(this.username)) {

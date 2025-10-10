@@ -13,8 +13,9 @@ import { PlaceDetailPage } from './place-detail.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    PlaceDetailPage,
     PlaceDetailPageRoutingModule
   ],
-  declarations: [PlaceDetailPage]
+  declarations: []
 })
 export class PlaceDetailPageModule {}

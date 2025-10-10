@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router'; // ✅ Importamos el Router
+import { UserService } from '../services/user.service';
+import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface PlacePhoto {
   id: string;
@@ -14,16 +18,25 @@ interface PlacePhoto {
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class HomePage implements OnInit {
 
   places: PlacePhoto[] = [];
+  username: string = 'Usuario';
 
   // ✅ Inyectamos el Router en el constructor
-  constructor(private router: Router) {}
+  private router = inject(Router);
+  private userService = inject(UserService);
 
   ngOnInit() {
     this.loadMockData();
+    // Obtener username real del servicio (si existe)
+    const name = this.userService.getUsername();
+    if (name) {
+      this.username = name;
+    }
   }
 
   loadMockData() {
@@ -75,5 +88,20 @@ export class HomePage implements OnInit {
   onPhotoClick(place: PlacePhoto) {
     console.log('Ir a detalle del lugar:', place);
     this.router.navigate(['/place-detail', place.id]); // 👈 Navega al detalle con el ID
+  }
+
+  // Métodos usados en la plantilla
+  goToPerfil() {
+    this.router.navigate(['/profile']);
+  }
+
+  goToConfig() {
+    this.router.navigate(['/settings']);
+  }
+
+  logout() {
+    // Cerrar sesión desde servicio y redirigir a login
+    this.userService.logout();
+    this.router.navigate(['/login']);
   }
 }
