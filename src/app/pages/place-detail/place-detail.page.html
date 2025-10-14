@@ -1,3 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ place?.place || 'Detalle' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="detail-container" *ngIf="place">
+    <div class="main-image">
+        <img [src]="place.imageUrl" [alt]="place.place" />
+      </div>
+      <div class="detail-body">
+      <h2>{{ place.place }}</h2>
+      <div class="meta">{{ place.location }} • {{ place.rating }} ★</div>
+
+      <h3>Galería</h3>
+      <div class="gallery">
+        <img class="thumb" *ngFor="let g of place.gallery" [src]="g" (click)="openImage(g)" />
+      </div>
+
+      <h3>Comentarios</h3>
+      <div *ngIf="place.comments?.length; else noComments">
+        <div class="comment" *ngFor="let c of place.comments">
+          <strong>{{ c.user }}</strong>
+          <p>{{ c.text }}</p>
+          <small>{{ c.created | date:'short' }}</small>
+        </div>
+      </div>
+      <ng-template #noComments>
+        <p>No hay comentarios aún. Sé el primero.</p>
+      </ng-template>
+
+      <ion-item>
+        <ion-input placeholder="Tu comentario" [(ngModel)]="newComment"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Valoración</ion-label>
+        <ion-range min="1" max="5" step="1" [(ngModel)]="newRating"></ion-range>
+      </ion-item>
+      <ion-button expand="block" (click)="submitFeedback()">Enviar</ion-button>
+    </div>
+  </div>
+    <div class="overlay" *ngIf="showModal" (click)="closeModal()">
+      <div class="overlay-inner">
+        <img [src]="selectedImage" />
+      </div>
+    </div>
+</ion-content>
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>place-detail</ion-title>

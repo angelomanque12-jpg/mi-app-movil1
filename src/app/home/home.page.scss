@@ -1,21 +1,71 @@
-.home-background {
-  --background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.home-container {
-  padding: 20px;
+.home-header {
+  padding: 18px;
   text-align: center;
-  color: #fff;
 }
 
-ion-card {
-  margin: 15px 0;
-  border-radius: 15px;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 12px;
+}
+
+.place-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
 }
 
-ion-card:hover {
-  transform: scale(1.03);
+.image-wrap {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
 }
+
+.image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-body {
+  padding: 10px 12px;
+  color: #222;
+}
+
+.place-title {
+  margin: 0 0 6px 0;
+  font-size: 1.05rem;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.author {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.actions { padding: 12px; }
+
+.image-wrap { position: relative; }
+.card-actions { position: absolute; right: 8px; top: 8px; display:flex; gap:6px; }
+.card-actions ion-button { --padding-start: 6px; --padding-end: 6px; }
+.card-actions .badge { font-size: 0.75rem; margin-left: 6px; color: #222 }
+
+.skeletons { padding: 12px; display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px }
+.skeleton-card { height: 240px; background: linear-gradient(90deg,#eee,#f5f5f5,#eee); border-radius:12px }
+
+.quickview-overlay { position: fixed; inset:0; display:flex; align-items:center;justify-content:center;background:rgba(0,0,0,0.8); z-index:2000 }
+.quickview-overlay img { max-width:90%; max-height:90%; border-radius:8px }

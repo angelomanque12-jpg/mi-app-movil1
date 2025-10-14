@@ -1,37 +1,70 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Inicio</ion-title>
+    <ion-title>Explorar lugares</ion-title>
+    <ion-searchbar
+      placeholder="Buscar lugar por nombre..."
+      showCancelButton="focus"
+      debounce="300"
+      [(ngModel)]="searchTerm"
+      (ionInput)="onSearchInput($event)">
+    </ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToPerfil()" title="Perfil">
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="goToConfig()" title="Configuración">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="home-background">
-  <div class="home-container">
+<ion-content>
+  <div class="home-header">
     <h2>¡Hola, {{ username }}!</h2>
-    <p>Bienvenido a tu aplicación</p>
+    <p>Explora fotos agrupadas por lugar. Toca una imagen para ver más.</p>
+  </div>
 
-    <!-- Tarjeta Perfil -->
-    <ion-card (click)="goToPerfil()">
-      <ion-card-header>
-        <ion-card-title>👤 Perfil</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        Ver y editar información de tu usuario.
-      </ion-card-content>
-    </ion-card>
+  <div class="places-grid">
+    <ng-container *ngFor="let p of (filteredPlaces.length ? filteredPlaces : places)">
+      <article class="place-card" (click)="onPhotoClick(p)">
+        <div class="image-wrap">
+          <img loading="lazy" [src]="p.imageUrl" [alt]="p.place" (error)="$event.target.src='assets/icon/placeholder.png'" />
+          <div class="card-actions">
+            <ion-button fill="clear" color="danger" (click)="$event.stopPropagation(); toggleLike(p)">
+              <ion-icon [name]="p.likedByUser ? 'heart' : 'heart-outline'"></ion-icon>
+              <span class="badge">{{ p.likes }}</span>
+            </ion-button>
+            <ion-button fill="clear" (click)="$event.stopPropagation(); share(p)">
+              <ion-icon name="share-social-outline"></ion-icon>
+              <span class="badge">{{ p.shares }}</span>
+            </ion-button>
+            <ion-button fill="clear" (click)="$event.stopPropagation(); quickView(p.imageUrl)">
+              <ion-icon name="eye-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+        <div class="card-body">
+          <h3 class="place-title">{{ p.place }}</h3>
+          <div class="meta">
+            <div class="rating">{{ p.rating }} ★</div>
+            <div class="location">{{ p.location }}</div>
+          </div>
+          <div class="author">Subido por: {{ p.user }}</div>
+        </div>
+      </article>
+    </ng-container>
+  </div>
 
-    <!-- Tarjeta Configuración -->
-    <ion-card (click)="goToConfig()">
-      <ion-card-header>
-        <ion-card-title>⚙ Configuración</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        Ajusta las preferencias de la aplicación.
-      </ion-card-content>
-    </ion-card>
+  <div class="skeletons" *ngIf="loading">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
 
-    <!-- Cerrar sesión -->
-    <ion-button expand="block" color="danger" shape="round" (click)="logout()">
-      Cerrar sesión
-    </ion-button>
+  <div class="quickview-overlay" *ngIf="quickViewImage" (click)="closeQuickView()">
+    <img [src]="quickViewImage" />
+  </div>
+
+  <div class="actions">
+    <ion-button expand="block" color="danger" (click)="logout()">Cerrar sesión</ion-button>
   </div>
 </ion-content>
