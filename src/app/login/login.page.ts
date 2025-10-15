@@ -19,6 +19,15 @@ export class LoginPage {
   newUsername = '';
   newPassword = '';
 
+  // Forgot password state (mock flows)
+  showForgotRequest = false;
+  showForgotReset = false;
+  forgotUsername = '';
+  lastToken: string | null = null;
+  resetUsername = '';
+  resetToken = '';
+  resetPasswordValue = '';
+
   private router = inject(Router);
   private userService = inject(UserService);
 
@@ -52,6 +61,55 @@ export class LoginPage {
 
   getLoggedUser(): string {
     return this.userService.getUsername();
+  }
+
+  openForgotPassword() {
+    // open the request modal by default
+    this.showForgotRequest = true;
+    this.showForgotReset = false;
+    this.forgotUsername = '';
+    this.lastToken = null;
+  }
+
+  closeForgot() {
+    this.showForgotRequest = false;
+    this.showForgotReset = false;
+    this.forgotUsername = '';
+    this.resetUsername = '';
+    this.resetToken = '';
+    this.resetPasswordValue = '';
+    this.lastToken = null;
+  }
+
+  sendReset() {
+    if (!this.forgotUsername) {
+      alert('Ingrese su usuario');
+      return;
+    }
+    const token = this.userService.sendResetLink(this.forgotUsername);
+    if (!token) {
+      alert('Usuario no encontrado');
+      return;
+    }
+    // show token for mock/testing and open reset panel
+    this.lastToken = token;
+    this.showForgotRequest = false;
+    this.showForgotReset = true;
+    this.resetUsername = this.forgotUsername;
+  }
+
+  submitReset() {
+    if (!this.resetUsername || !this.resetToken || !this.resetPasswordValue) {
+      alert('Complete todos los campos');
+      return;
+    }
+    const ok = this.userService.resetPassword(this.resetUsername, this.resetToken, this.resetPasswordValue);
+    if (ok) {
+      alert('Contraseña restablecida correctamente. Ahora puede iniciar sesión.');
+      this.closeForgot();
+    } else {
+      alert('Token inválido o usuario incorrecto');
+    }
   }
 }
 

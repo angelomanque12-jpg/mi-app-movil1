@@ -57,6 +57,59 @@
 
       </ion-card-content>
     </ion-card>
+    <div class="ion-padding">
+      <p><a (click)="openForgotPassword()">¿Olvidó su contraseña?</a></p>
+    </div>
+
+    <!-- Forgot password request modal (mock) -->
+    <div *ngIf="showForgotRequest" class="forgot-modal">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Recuperar contraseña</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="stacked">Usuario</ion-label>
+            <ion-input [(ngModel)]="forgotUsername" placeholder="Ingrese su usuario"></ion-input>
+          </ion-item>
+          <div class="ion-margin-top">
+            <ion-button expand="block" (click)="sendReset()">Enviar enlace de recuperación</ion-button>
+            <ion-button expand="block" color="light" (click)="closeForgot()">Cancelar</ion-button>
+          </div>
+          <div *ngIf="lastToken" class="ion-padding">
+            <p><strong>Token (mock):</strong> {{ lastToken }}</p>
+            <p>Use este token en la sección "Restablecer contraseña" para cambiar su contraseña (solo mock).</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Forgot password reset modal (mock) -->
+    <div *ngIf="showForgotReset" class="forgot-modal">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Restablecer contraseña</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="stacked">Usuario</ion-label>
+            <ion-input [(ngModel)]="resetUsername" placeholder="Usuario"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Token</ion-label>
+            <ion-input [(ngModel)]="resetToken" placeholder="Token recibido"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Nueva contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="resetPasswordValue" placeholder="Nueva contraseña"></ion-input>
+          </ion-item>
+          <div class="ion-margin-top">
+            <ion-button expand="block" (click)="submitReset()">Restablecer contraseña</ion-button>
+            <ion-button expand="block" color="light" (click)="closeForgot()">Cancelar</ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
 </ion-content>
 

@@ -46,4 +46,28 @@ export class UserService {
     this.username = '';
     localStorage.removeItem('username');
   }
+
+  // Mock: generate a reset token and 'send' it (store in localStorage)
+  sendResetLink(username: string): string | null {
+    if (!this.users[username]) return null;
+    const token = Math.random().toString(36).substring(2, 9);
+    const tokens = JSON.parse(localStorage.getItem('resetTokens') || '{}');
+    tokens[username] = token;
+    localStorage.setItem('resetTokens', JSON.stringify(tokens));
+    // In a real app, you would email the token; here we return it so UI can display for testing
+    return token;
+  }
+
+  // Mock: reset password if token matches stored token
+  resetPassword(username: string, token: string, newPassword: string): boolean {
+    const tokens = JSON.parse(localStorage.getItem('resetTokens') || '{}');
+    if (tokens[username] && tokens[username] === token) {
+      this.users[username] = newPassword;
+      localStorage.setItem('users', JSON.stringify(this.users));
+      delete tokens[username];
+      localStorage.setItem('resetTokens', JSON.stringify(tokens));
+      return true;
+    }
+    return false;
+  }
 }
