@@ -28,6 +28,8 @@ export class HomePage implements OnInit {
   private placesService = inject(PlacesService);
   loading = true;
   quickViewImage?: string;
+  // track images that failed to load to avoid flicker/retry loops
+  imageFailed: Record<string, boolean> = {};
 
   ngOnInit() {
   this.placesService.getPlaces().subscribe(list => { this.places = list; this.filteredPlaces = list.slice(); this.loading = false; });
@@ -97,7 +99,27 @@ export class HomePage implements OnInit {
   // Helper: asegurar URL válida (fallback a placeholder si es necesario)
   safeImage(url: string) {
     if (!url) return 'assets/icon/placeholder.png';
+    // if this url previously failed, return placeholder
+    if (this.imageFailed[url]) return 'assets/icon/placeholder.png';
     return url;
+  }
+
+  onImageLoad(idOrUrl: string) {
+    // if we tracked this as failed earlier, clear it
+    if (this.imageFailed[idOrUrl]) delete this.imageFailed[idOrUrl];
+  }
+
+  onImageError(event: any, url?: string) {
+    try {
+      const img: HTMLImageElement = event.target as HTMLImageElement;
+      const src = url || img.src;
+      // mark this src as failed so safeImage returns placeholder next time
+      if (src) this.imageFailed[src] = true;
+      img.src = 'assets/icon/placeholder.png';
+    } catch (e) {
+      // fallback
+      event.target.src = 'assets/icon/placeholder.png';
+    }
   }
 
   // Helper para futuro: calcular promedio (no usado aún)

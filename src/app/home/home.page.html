@@ -29,7 +29,8 @@
     <ng-container *ngFor="let p of (filteredPlaces.length ? filteredPlaces : places)">
       <article class="place-card" (click)="onPhotoClick(p)">
         <div class="image-wrap">
-          <img loading="lazy" [src]="p.imageUrl" [alt]="p.place" (error)="$event.target.src='assets/icon/placeholder.png'" />
+    <img loading="lazy" [src]="safeImage(p.imageUrl)" [alt]="p.place"
+      (load)="onImageLoad(p.imageUrl)" (error)="onImageError($event, p.imageUrl)" />
           <div class="card-actions">
             <ion-button fill="clear" color="danger" (click)="$event.stopPropagation(); toggleLike(p)">
               <ion-icon [name]="p.likedByUser ? 'heart' : 'heart-outline'"></ion-icon>
