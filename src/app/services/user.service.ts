@@ -43,6 +43,16 @@ export class UserService {
   }
 
   logout() {
+    /**
+     * Log the current user out.
+     *
+     * Behavior:
+     * - Clears the in-memory `username` and removes the persisted `username` key from localStorage.
+     * - This function intentionally does not perform navigation; callers should redirect (e.g. HomePage confirms
+     *   logout and performs router navigation or a hard redirect).
+     *
+     * Side-effects: localStorage is modified.
+     */
     this.username = '';
     localStorage.removeItem('username');
   }

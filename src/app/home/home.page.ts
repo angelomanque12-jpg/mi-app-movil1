@@ -213,7 +213,18 @@ export class HomePage implements OnInit {
     await alert.present();
     const { role } = await alert.onDidDismiss();
     if (role !== 'cancel') {
-      // perform logout and force navigation to login (replace history)
+      /**
+       * Perform logout and navigate to login.
+       *
+       * Behavior:
+       * - Calls `UserService.logout()` which clears the stored username from localStorage.
+       * - Attempts an Angular router navigation to `/login` using `replaceUrl:true` so the
+       *   history doesn't keep the protected pages.
+       * - If navigation fails (or returns false) we fallback to a full page reload to `/login`.
+       *
+       * Inputs: none. Side-effects: clears persisted username and navigates the browser.
+       * Error modes: router navigation rejection (handled with a hard redirect fallback).
+       */
       this.userService.logout();
       // try Angular navigation first
       this.router.navigateByUrl('/login', { replaceUrl: true }).then(success => {

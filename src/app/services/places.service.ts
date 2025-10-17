@@ -55,15 +55,30 @@ export class PlacesService {
   private placesSubject = new BehaviorSubject<PlacePhoto[]>(this.places.slice());
 
   getPlaces(): Observable<PlacePhoto[]> {
+    /**
+     * Returns an observable stream of the current places list.
+     *
+     * Consumers should subscribe to receive updates when the list changes.
+     * Output: Observable<PlacePhoto[]> (emits a shallow copy of internal array)
+     */
     return this.placesSubject.asObservable();
   }
 
   getPlaceById(id: string): Observable<PlacePhoto | undefined> {
+    /**
+     * Retrieve a single PlacePhoto by id.
+     * Returns an Observable of a shallow-copied object or undefined if not found.
+     */
     const p = this.places.find(x => x.id === id);
     return of(p ? { ...p } : undefined);
   }
 
   addComment(placeId: string, user: string, text: string) {
+    /**
+     * Add a comment to a place.
+     * Side-effect: mutates internal array and emits updated places via BehaviorSubject.
+     * If the place does not exist, the function is a no-op.
+     */
     const p = this.places.find(x => x.id === placeId);
     if (!p) return;
     p.comments = p.comments || [];
@@ -72,6 +87,10 @@ export class PlacesService {
   }
 
   addRating(placeId: string, rating: number) {
+    /**
+     * Add a rating to a place.
+     * Note: current logic uses a naive averaging for demo purposes.
+     */
     const p = this.places.find(x => x.id === placeId);
     if (!p) return;
     // simple average update: (oldRating + newRating)/2 - placeholder logic
@@ -80,6 +99,10 @@ export class PlacesService {
   }
 
   toggleLike(placeId: string) {
+    /**
+     * Toggle the like flag for the current user on the given place.
+     * Updates like count and emits the new list.
+     */
     const p = this.places.find(x => x.id === placeId);
     if (!p) return;
     p.likedByUser = !p.likedByUser;
@@ -88,6 +111,10 @@ export class PlacesService {
   }
 
   share(placeId: string) {
+    /**
+     * Increment the share counter for the place. This is a local-only mock and does not
+     * integrate with native share APIs or a backend.
+     */
     const p = this.places.find(x => x.id === placeId);
     if (!p) return;
     p.shares = (p.shares || 0) + 1;
@@ -96,6 +123,16 @@ export class PlacesService {
 
   // Add a new place (used for photos captured by user)
   addPlace(data: { place: string; imageUrl: string; location?: string; user?: string }) {
+    /**
+     * Add a new place created by the user (for example, when attaching a captured photo).
+     *
+     * Behavior:
+     * - Generates a simple incremental id and prepends the new place to the array.
+     * - Emits the updated list via BehaviorSubject.
+     *
+     * Note: ids are not globally unique beyond the current in-memory list and this is
+     * intended for demo/local usage. Persist to backend or filesystem for production.
+     */
     const id = (this.places.length + 1).toString();
     const newPlace: PlacePhoto = {
       id,

@@ -24,6 +24,20 @@ export class CapturePage {
     try {
       // dynamic import of Capacitor Camera so the project can build even if Capacitor isn't installed
       // Try to use Capacitor Camera if available at runtime (no static import to avoid build errors)
+      /**
+       * Try to use a native Camera plugin at runtime.
+       *
+       * Notes:
+       * - We use a runtime lookup (window.Capacitor.Plugins.Camera) instead of a static
+       *   import so the web build doesn't fail when Capacitor isn't installed.
+       * - If the plugin exists and exposes `getPhoto`, call it to capture an image.
+       * - On success we pass the captured object to `PhotoService.saveCapturedPhoto`.
+       * - On any error or if the plugin is not available, we fall back to the file input selector.
+       *
+       * Input: none (uses `window` runtime plugin if available)
+       * Output: saves a photo via PhotoService or triggers file selector fallback
+       * Error modes: plugin not present, plugin call rejected, fetch/read errors inside PhotoService
+       */
       try {
         const win: any = window as any;
         const CameraPlugin = win?.Capacitor?.Plugins?.Camera || win?.Camera || null;
