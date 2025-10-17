@@ -1,5 +1,11 @@
 .login-bg {
-    --background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    /* Background image provided by user with fallback gradient */
+    background-image: url('https://previews.123rf.com/images/anawhite/anawhite1410/anawhite141000015/32541501-seamless-background-with-blue-cameras.jpg');
+    background-position: center center;
+    background-repeat: repeat; /* pattern intended */
+    background-size: auto; /* keep original pattern scale */
+    /* Fallback and overlay */
+    --background: linear-gradient(135deg, rgba(79,172,254,0.85) 0%, rgba(0,242,254,0.85) 100%);
   }
   
   .wrap {
@@ -23,6 +29,22 @@
     object-fit: contain;
     margin: 6px auto 8px;
     display: block;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-title {
+    margin: 0 0 6px 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #000000; /* changed to black as requested */
+    text-shadow: 0 1px 2px rgba(255,255,255,0.12);
   }
   
   ion-card-title {
@@ -55,6 +77,17 @@
     margin-top: 10px;
     --border-radius: 24px;
     --box-shadow: 0 8px 18px rgba(79,172,254,.45);
+    transition: transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease, opacity 120ms ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(79,172,254,0.28);
+    }
+
+    &:active {
+      transform: translateY(0);
+      opacity: 0.95;
+    }
   }
   
   .btn-success {
@@ -63,6 +96,17 @@
     --background-activated: #38f9d7;
     --border-radius: 24px;
     --box-shadow: 0 8px 18px rgba(67,233,123,.35);
+    transition: transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease, opacity 120ms ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(67,233,123,0.28);
+    }
+
+    &:active {
+      transform: translateY(0);
+      opacity: 0.95;
+    }
   }
   
   .switch {

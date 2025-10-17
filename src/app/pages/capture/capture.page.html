@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Capturar foto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="capture-actions">
+    <ion-button expand="full" color="primary" (click)="takePhoto()">Tomar foto</ion-button>
+    <input type="file" accept="image/*" id="fileInput" (change)="onFileSelected($event)" style="display:none" />
+  </div>
+  <div class="meta-inputs">
+    <ion-item>
+      <ion-label position="stacked">Nombre del lugar</ion-label>
+      <ion-input [(ngModel)]="placeName" placeholder="Ej: Mi Playa"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Ubicación (opcional)</ion-label>
+      <ion-input [(ngModel)]="placeLocation" placeholder="Ej: Viña del Mar"></ion-input>
+    </ion-item>
+    <ion-button expand="full" color="secondary" (click)="attachLastPhoto()">Guardar en Home</ion-button>
+  </div>
+  <div class="saved-list">
+    <h3>Fotos guardadas</h3>
+    <div *ngFor="let p of photoService.getSaved()">
+      <img [src]="p.webviewPath" style="width:120px;height:80px;object-fit:cover;border-radius:8px;margin:6px" />
+      <div>{{ p.createdAt }}</div>
+    </div>
+  </div>
+</ion-content>

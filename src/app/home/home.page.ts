@@ -1,8 +1,16 @@
 import { Component, OnInit, inject } from '@angular/core';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  query,
+  stagger
+} from '@angular/animations';
 import { Router } from '@angular/router'; // ✅ Importamos el Router
 import { UserService } from '../services/user.service';
 import { PlacesService, PlacePhoto as PlacePhotoModel } from '../services/places.service';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +22,31 @@ interface PlacePhoto extends PlacePhotoModel {}
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
+  ,
+  animations: [
+    trigger('listAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(10px)' }),
+            stagger(80, [animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
+          ],
+          { optional: true }
+        )
+      ])
+    ]),
+    trigger('cardAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.985)' }),
+        animate('220ms cubic-bezier(.2,.8,.2,1)', style({ opacity: 1, transform: 'scale(1)' }))
+      ])
+    ]),
+    trigger('overlayAnimation', [
+      transition(':enter', [style({ opacity: 0 }), animate('200ms ease-out', style({ opacity: 1 }))]),
+      transition(':leave', [animate('150ms ease-in', style({ opacity: 0 }))])
+    ])
+  ]
 })
 export class HomePage implements OnInit {
 
@@ -26,6 +59,7 @@ export class HomePage implements OnInit {
   private router = inject(Router);
   private userService = inject(UserService);
   private placesService = inject(PlacesService);
+  private alertCtrl = inject(AlertController);
   loading = true;
   quickViewImage?: string;
   // track images that failed to load to avoid flicker/retry loops
@@ -108,18 +142,17 @@ export class HomePage implements OnInit {
     // if we tracked this as failed earlier, clear it
     if (this.imageFailed[idOrUrl]) delete this.imageFailed[idOrUrl];
   }
+  onImageError(url?: string) {
+    // Mark failed URL so safeImage will return placeholder next render
+    if (url) this.imageFailed[url] = true;
+    // Trigger small update to arrays so Angular re-evaluates bindings without DOM-direct manipulation
+    this.filteredPlaces = this.filteredPlaces.slice();
+    this.places = this.places.slice();
+  }
 
-  onImageError(event: any, url?: string) {
-    try {
-      const img: HTMLImageElement = event.target as HTMLImageElement;
-      const src = url || img.src;
-      // mark this src as failed so safeImage returns placeholder next time
-      if (src) this.imageFailed[src] = true;
-      img.src = 'assets/icon/placeholder.png';
-    } catch (e) {
-      // fallback
-      event.target.src = 'assets/icon/placeholder.png';
-    }
+  // trackBy for ngFor to keep DOM stable when list updates
+  trackByPlace(index: number, item: PlacePhoto) {
+    return item.id || index;
   }
 
   // Helper para futuro: calcular promedio (no usado aún)
@@ -168,9 +201,30 @@ export class HomePage implements OnInit {
     this.router.navigate(['/settings']);
   }
 
-  logout() {
-    // Cerrar sesión desde servicio y redirigir a login
-    this.userService.logout();
-    this.router.navigate(['/login']);
+  async confirmLogout() {
+    const alert = await this.alertCtrl.create({
+      header: 'Cerrar sesión',
+      message: '¿Estás seguro que deseas cerrar sesión?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Cerrar sesión', role: 'confirm' }
+      ]
+    });
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    if (role !== 'cancel') {
+      // perform logout and force navigation to login (replace history)
+      this.userService.logout();
+      // try Angular navigation first
+      this.router.navigateByUrl('/login', { replaceUrl: true }).then(success => {
+        if (!success) {
+          // fallback: force a full reload to the login route
+          window.location.href = '/login';
+        }
+      }).catch(() => {
+        // fallback in case of unexpected error
+        window.location.href = '/login';
+      });
+    }
   }
 }

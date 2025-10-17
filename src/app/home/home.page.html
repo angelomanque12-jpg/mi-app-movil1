@@ -15,6 +15,9 @@
       <ion-button (click)="goToConfig()" title="Configuración">
         <ion-icon name="settings-outline"></ion-icon>
       </ion-button>
+      <ion-button (click)="confirmLogout()" title="Cerrar sesión">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -25,22 +28,22 @@
     <p>Explora fotos agrupadas por lugar. Toca una imagen para ver más.</p>
   </div>
 
-  <div class="places-grid">
-    <ng-container *ngFor="let p of (filteredPlaces.length ? filteredPlaces : places)">
-      <article class="place-card" (click)="onPhotoClick(p)">
+  <div class="places-grid" [@listAnimation]>
+    <ng-container *ngFor="let p of (filteredPlaces.length ? filteredPlaces : places); trackBy: trackByPlace">
+      <article class="place-card" (click)="onPhotoClick(p)" [@cardAnimation]>
         <div class="image-wrap">
     <img loading="lazy" [src]="safeImage(p.imageUrl)" [alt]="p.place"
-      (load)="onImageLoad(p.imageUrl)" (error)="onImageError($event, p.imageUrl)" />
+      (load)="onImageLoad(p.imageUrl)" (error)="onImageError(p.imageUrl)" />
           <div class="card-actions">
-            <ion-button fill="clear" color="danger" (click)="$event.stopPropagation(); toggleLike(p)">
+            <ion-button class="micro-btn" fill="clear" color="danger" (click)="$event.stopPropagation(); toggleLike(p)">
               <ion-icon [name]="p.likedByUser ? 'heart' : 'heart-outline'"></ion-icon>
               <span class="badge">{{ p.likes }}</span>
             </ion-button>
-            <ion-button fill="clear" (click)="$event.stopPropagation(); share(p)">
+            <ion-button class="micro-btn" fill="clear" (click)="$event.stopPropagation(); share(p)">
               <ion-icon name="share-social-outline"></ion-icon>
               <span class="badge">{{ p.shares }}</span>
             </ion-button>
-            <ion-button fill="clear" (click)="$event.stopPropagation(); quickView(p.imageUrl)">
+            <ion-button class="micro-btn" fill="clear" (click)="$event.stopPropagation(); quickView(p.imageUrl)">
               <ion-icon name="eye-outline"></ion-icon>
             </ion-button>
           </div>
@@ -61,11 +64,11 @@
     <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
   </div>
 
-  <div class="quickview-overlay" *ngIf="quickViewImage" (click)="closeQuickView()">
+  <div class="quickview-overlay" *ngIf="quickViewImage" (click)="closeQuickView()" [@overlayAnimation]>
     <img [src]="quickViewImage" />
   </div>
 
   <div class="actions">
-    <ion-button expand="block" color="danger" (click)="logout()">Cerrar sesión</ion-button>
+    <ion-button expand="block" color="danger" (click)="confirmLogout()">Cerrar sesión</ion-button>
   </div>
 </ion-content>

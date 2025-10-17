@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 export interface PlacePhoto {
   id: string;
@@ -34,26 +34,28 @@ export class PlacesService {
   { id: '4', place: 'Lago Llanquihue', imageUrl: 'https://storage.googleapis.com/chile-travel-cdn/2021/07/lago-llanquihue_prin-min.jpg', rating: 4.6, location: 'Puerto Varas, Chile', user: 'Felipe', comments: [], gallery: ['https://storage.googleapis.com/chile-travel-cdn/2021/07/lago-llanquihue_prin-min.jpg','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 21, likedByUser: false, shares: 1 },
   { id: '5', place: 'Isla de Pascua', imageUrl: 'https://www.tangol.com/Blog/Fotos/que-hacer-en-isla-de-pascua_0_201711131023220-resized.jpg', rating: 4.7, location: 'Rapa Nui, Chile', user: 'Ana', comments: [], gallery: ['https://www.tangol.com/Blog/Fotos/que-hacer-en-isla-de-pascua_0_201711131023220-resized.jpg','https://images.unsplash.com/photo-1506744038136-46273834b3fb'], likes: 45, likedByUser: false, shares: 8 },
   { id: '6', place: 'Valparaíso', imageUrl: 'https://chileandtravelmagazine.com/wp-content/uploads/2017/09/valparaiso-900-600.jpg', rating: 4.3, location: 'Valparaíso, Chile', user: 'Lucia', comments: [], gallery: ['https://chileandtravelmagazine.com/wp-content/uploads/2017/09/valparaiso-900-600.jpg','https://images.unsplash.com/photo-1467269204594-9661b134dd2b'], likes: 60, likedByUser: false, shares: 10 },
-    { id: '7', place: 'Atacama Dunes', imageUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470', rating: 4.9, location: 'San Pedro de Atacama, Chile', user: 'Jose', comments: [], gallery: ['https://images.unsplash.com/photo-1501785888041-af3ef285b470','https://images.unsplash.com/photo-1501785888041-0e4b5f6a1b05'], likes: 100, likedByUser: false, shares: 21 },
-    { id: '8', place: 'Bariloche', imageUrl: 'https://images.unsplash.com/photo-1501785888041-12d4f8b0b053', rating: 4.5, location: 'Bariloche, Argentina', user: 'Martín', comments: [], gallery: ['https://images.unsplash.com/photo-1501785888041-12d4f8b0b053','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 65, likedByUser: false, shares: 7 },
-    { id: '9', place: 'Mendoza Vineyards', imageUrl: 'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf', rating: 4.6, location: 'Mendoza, Argentina', user: 'Sofia', comments: [], gallery: ['https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 32, likedByUser: false, shares: 4 },
-    { id: '10', place: 'Iguazu Falls', imageUrl: 'https://images.unsplash.com/photo-1508264165352-258a6c1f7f4f', rating: 4.9, location: 'Misiones, Argentina/Brazil', user: 'Daniel', comments: [], gallery: ['https://images.unsplash.com/photo-1508264165352-258a6c1f7f4f','https://images.unsplash.com/photo-1506459225024-1428097a7e18'], likes: 200, likedByUser: false, shares: 34 },
-    { id: '11', place: 'Cusco', imageUrl: 'https://images.unsplash.com/photo-1526481280698-1d0a7f3d5ae2', rating: 4.4, location: 'Cusco, Perú', user: 'Rosa', comments: [], gallery: ['https://images.unsplash.com/photo-1526481280698-1d0a7f3d5ae2','https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf'], likes: 18, likedByUser: false, shares: 2 },
-    { id: '12', place: 'Machu Picchu', imageUrl: 'https://images.unsplash.com/photo-1506515004344-3b2b5f0d7d6c', rating: 4.9, location: 'Cusco Region, Perú', user: 'Pablo', comments: [], gallery: ['https://images.unsplash.com/photo-1506515004344-3b2b5f0d7d6c','https://images.unsplash.com/photo-1526481280698-1d0a7f3d5ae2'], likes: 420, likedByUser: false, shares: 120 },
-    { id: '13', place: 'Salar de Uyuni', imageUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470', rating: 4.8, location: 'Potosí, Bolivia', user: 'Laura', comments: [], gallery: ['https://images.unsplash.com/photo-1501785888041-af3ef285b470','https://images.unsplash.com/photo-1506784983877-45594efa4cbe'], likes: 140, likedByUser: false, shares: 22 },
-    { id: '14', place: 'Cartagena', imageUrl: 'https://images.unsplash.com/photo-1503264116251-35a269479413', rating: 4.5, location: 'Cartagena, Colombia', user: 'Diego', comments: [], gallery: ['https://images.unsplash.com/photo-1503264116251-35a269479413','https://images.unsplash.com/photo-1508264165352-258a6c1f7f4f'], likes: 73, likedByUser: false, shares: 9 },
-    { id: '15', place: 'Bogotá', imageUrl: 'https://images.unsplash.com/photo-1508873898-9d634f02a0a2', rating: 4.2, location: 'Bogotá, Colombia', user: 'Camilo', comments: [], gallery: ['https://images.unsplash.com/photo-1508873898-9d634f02a0a2','https://images.unsplash.com/photo-1503264116251-35a269479413'], likes: 20, likedByUser: false, shares: 3 },
-    { id: '16', place: 'Quito', imageUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee', rating: 4.3, location: 'Quito, Ecuador', user: 'María', comments: [], gallery: ['https://images.unsplash.com/photo-1500530855697-b586d89ba3ee','https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf'], likes: 12, likedByUser: false, shares: 1 },
-    { id: '17', place: 'Galápagos', imageUrl: 'https://images.unsplash.com/photo-1493558103817-58b2924bce98', rating: 4.8, location: 'Ecuador', user: 'Andrés', comments: [], gallery: ['https://images.unsplash.com/photo-1493558103817-58b2924bce98','https://images.unsplash.com/photo-1508264165352-258a6c1f7f4f'], likes: 210, likedByUser: false, shares: 50 },
-    { id: '18', place: 'Rio de Janeiro', imageUrl: 'https://images.unsplash.com/photo-1509323865249-5c4b6f3d73e2', rating: 4.4, location: 'Rio de Janeiro, Brazil', user: 'Bruno', comments: [], gallery: ['https://images.unsplash.com/photo-1509323865249-5c4b6f3d73e2','https://images.unsplash.com/photo-1503264116251-35a269479413'], likes: 320, likedByUser: false, shares: 64 },
-    { id: '19', place: 'Santiago Centro', imageUrl: 'https://images.unsplash.com/photo-1506466010722-395aa2bef877', rating: 4.0, location: 'Santiago, Chile', user: 'Clara', comments: [], gallery: ['https://images.unsplash.com/photo-1506466010722-395aa2bef877','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 8, likedByUser: false, shares: 0 },
-    // Example showing a local asset image path. To use this, add the file
-    // `src/assets/images/new-york.jpg` (or change the filename below to match) and rebuild.
-    { id: '20', place: 'New York City', imageUrl: 'assets/images/new-york.jpg', rating: 4.6, location: 'New York, USA', user: 'Alex', comments: [], gallery: ['assets/images/new-york.jpg','https://images.unsplash.com/photo-1506459225024-1428097a7e18'], likes: 555, likedByUser: false, shares: 210 }
+  { id: '7', place: 'Dunas de Atacama', imageUrl: 'https://storage.googleapis.com/chile-travel-cdn/2022/10/d3ef1f8b-atacama-drone-16-1.jpg', rating: 4.9, location: 'San Pedro de Atacama, Chile', user: 'Jose', comments: [], gallery: ['https://storage.googleapis.com/chile-travel-cdn/2022/10/d3ef1f8b-atacama-drone-16-1.jpg','https://images.unsplash.com/photo-1501785888041-0e4b5f6a1b05'], likes: 100, likedByUser: false, shares: 21 },
+  { id: '8', place: 'Bariloche', imageUrl: 'https://www.latamairlines.com/content/dam/latamxp/sites/vamos-latam/news-nieve-sudam%C3%A9rica-may25/bariloche/Modelo-3.png', rating: 4.5, location: 'Bariloche, Argentina', user: 'Martín', comments: [], gallery: ['https://www.latamairlines.com/content/dam/latamxp/sites/vamos-latam/news-nieve-sudam%C3%A9rica-may25/bariloche/Modelo-3.png','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 65, likedByUser: false, shares: 7 },
+  { id: '9', place: 'Mendoza', imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/06/73/3c/44.jpg', rating: 4.6, location: 'Mendoza, Argentina', user: 'Sofia', comments: [], gallery: ['https://media.tacdn.com/media/attractions-splice-spp-674x446/06/73/3c/44.jpg','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 32, likedByUser: false, shares: 4 },
+  { id: '10', place: 'Cataratas del Iguazu', imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/cb/95/57/img-20180721-wa0042-largejpg.jpg?w=900&h=500&s=1', rating: 4.9, location: 'Misiones, Argentina/Brazil', user: 'Daniel', comments: [], gallery: ['https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/cb/95/57/img-20180721-wa0042-largejpg.jpg?w=900&h=500&s=1','https://images.unsplash.com/photo-1506459225024-1428097a7e18'], likes: 200, likedByUser: false, shares: 34 },
+  { id: '11', place: 'Cusco', imageUrl: 'https://www.alpacaexpeditions.com/wp-content/uploads/cusco-cuna-del-imperio-inca-1.jpg', rating: 4.4, location: 'Cusco, Perú', user: 'Rosa', comments: [], gallery: ['https://www.alpacaexpeditions.com/wp-content/uploads/cusco-cuna-del-imperio-inca-1.jpg','https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf'], likes: 18, likedByUser: false, shares: 2 },
+  { id: '12', place: 'Machu Picchu', imageUrl: 'https://cuscoperu.b-cdn.net/wp-content/uploads/2024/06/imagen-destacada.jpg', rating: 4.9, location: 'Cusco Region, Perú', user: 'Pablo', comments: [], gallery: ['https://cuscoperu.b-cdn.net/wp-content/uploads/2024/06/imagen-destacada.jpg','https://images.unsplash.com/photo-1526481280698-1d0a7f3d5ae2'], likes: 420, likedByUser: false, shares: 120 },
+  { id: '13', place: 'Salar de Uyuni', imageUrl: 'https://imagenes.elpais.com/resizer/v2/MGN6UNRGHZEBLHKLUR6ASE4XZY.jpg?auth=4725b0113426c6cdc68ee70519927437d2736ea989f93209fbb32e2797a1c19d&width=1960&height=1470&focal=2473%2C2062', rating: 4.8, location: 'Potosí, Bolivia', user: 'Laura', comments: [], gallery: ['https://imagenes.elpais.com/resizer/v2/MGN6UNRGHZEBLHKLUR6ASE4XZY.jpg?auth=4725b0113426c6cdc68ee70519927437d2736ea989f93209fbb32e2797a1c19d&width=1960&height=1470&focal=2473%2C2062','https://images.unsplash.com/photo-1506784983877-45594efa4cbe'], likes: 140, likedByUser: false, shares: 22 },
+  { id: '14', place: 'Cartagena', imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/f6/92/cd/cartagena-colombia.jpg?w=400&h=300&s=1', rating: 4.5, location: 'Cartagena, Colombia', user: 'Diego', comments: [], gallery: ['https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/f6/92/cd/cartagena-colombia.jpg?w=400&h=300&s=1','https://images.unsplash.com/photo-1508264165352-258a6c1f7f4f'], likes: 73, likedByUser: false, shares: 9 },
+  { id: '15', place: 'Bogotá', imageUrl: 'https://colombia-travels.com/wp-content/uploads/adobestock-266299444-1-1280x800.jpeg', rating: 4.2, location: 'Bogotá, Colombia', user: 'Camilo', comments: [], gallery: ['https://colombia-travels.com/wp-content/uploads/adobestock-266299444-1-1280x800.jpeg','https://images.unsplash.com/photo-1503264116251-35a269479413'], likes: 20, likedByUser: false, shares: 3 },
+  { id: '16', place: 'Quito', imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/0f/cf/db/ac.jpg', rating: 4.3, location: 'Quito, Ecuador', user: 'María', comments: [], gallery: ['https://media.tacdn.com/media/attractions-splice-spp-674x446/0f/cf/db/ac.jpg','https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf'], likes: 12, likedByUser: false, shares: 1 },
+  { id: '17', place: 'Galápagos', imageUrl: 'https://img.goraymi.com/2019/12/05/5446eefab33b499a4fa71ea36c9938f1_xl.jpg', rating: 4.8, location: 'Ecuador', user: 'Andrés', comments: [], gallery: ['https://img.goraymi.com/2019/12/05/5446eefab33b499a4fa71ea36c9938f1_xl.jpg','https://images.unsplash.com/photo-1508264165352-258a6c1f7f4f'], likes: 210, likedByUser: false, shares: 50 },
+  { id: '18', place: 'Rio de Janeiro', imageUrl: 'https://www.pestana.com/es/destinos/america-del-sur/brasil/rio-janeiro/_jcr_content/root/container/hero_banner/cmp-hero-banner__container__background-image.coreimg.jpeg/1733419661083/herobanner-region-rio-de-janeiro.jpeg', rating: 4.4, location: 'Rio de Janeiro, Brazil', user: 'Bruno', comments: [], gallery: ['https://www.pestana.com/es/destinos/america-del-sur/brasil/rio-janeiro/_jcr_content/root/container/hero_banner/cmp-hero-banner__container__background-image.coreimg.jpeg/1733419661083/herobanner-region-rio-de-janeiro.jpeg','https://images.unsplash.com/photo-1503264116251-35a269479413'], likes: 320, likedByUser: false, shares: 64 },
+  { id: '19', place: 'Santiago Centro', imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/0f/9d/4e/87.jpg', rating: 4.0, location: 'Santiago, Chile', user: 'Clara', comments: [], gallery: ['https://media.tacdn.com/media/attractions-splice-spp-674x446/0f/9d/4e/87.jpg','https://images.unsplash.com/photo-1501785888041-af3ef285b470'], likes: 8, likedByUser: false, shares: 0 },
+  // Example showing a local asset image path. To use this, add the file
+  // `src/assets/images/new-york.jpg` (or change the filename below to match) and rebuild.
+  { id: '20', place: 'New York City', imageUrl: 'https://www.civitatis.com/f/estados-unidos/nueva-york/galeria/carteles-publicitarios-times-square.jpg', rating: 4.6, location: 'New York, USA', user: 'Alex', comments: [], gallery: ['https://www.civitatis.com/f/estados-unidos/nueva-york/galeria/carteles-publicitarios-times-square.jpg','https://images.unsplash.com/photo-1506459225024-1428097a7e18'], likes: 555, likedByUser: false, shares: 210 }
   ];
 
+  private placesSubject = new BehaviorSubject<PlacePhoto[]>(this.places.slice());
+
   getPlaces(): Observable<PlacePhoto[]> {
-    return of(this.places.slice());
+    return this.placesSubject.asObservable();
   }
 
   getPlaceById(id: string): Observable<PlacePhoto | undefined> {
@@ -66,6 +68,7 @@ export class PlacesService {
     if (!p) return;
     p.comments = p.comments || [];
     p.comments.push({ user, text, created: new Date().toISOString() });
+    this.placesSubject.next(this.places.slice());
   }
 
   addRating(placeId: string, rating: number) {
@@ -73,6 +76,7 @@ export class PlacesService {
     if (!p) return;
     // simple average update: (oldRating + newRating)/2 - placeholder logic
     p.rating = Math.round(((p.rating + rating) / 2) * 10) / 10;
+    this.placesSubject.next(this.places.slice());
   }
 
   toggleLike(placeId: string) {
@@ -80,11 +84,33 @@ export class PlacesService {
     if (!p) return;
     p.likedByUser = !p.likedByUser;
     p.likes = (p.likes || 0) + (p.likedByUser ? 1 : -1);
+    this.placesSubject.next(this.places.slice());
   }
 
   share(placeId: string) {
     const p = this.places.find(x => x.id === placeId);
     if (!p) return;
     p.shares = (p.shares || 0) + 1;
+    this.placesSubject.next(this.places.slice());
+  }
+
+  // Add a new place (used for photos captured by user)
+  addPlace(data: { place: string; imageUrl: string; location?: string; user?: string }) {
+    const id = (this.places.length + 1).toString();
+    const newPlace: PlacePhoto = {
+      id,
+      place: data.place,
+      imageUrl: data.imageUrl,
+      rating: 0,
+      location: data.location || '',
+      user: data.user || 'Usuario',
+      comments: [],
+      gallery: [data.imageUrl],
+      likes: 0,
+      likedByUser: false,
+      shares: 0
+    };
+    this.places.unshift(newPlace);
+    this.placesSubject.next(this.places.slice());
   }
 }
