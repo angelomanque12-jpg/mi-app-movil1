@@ -10,7 +10,8 @@ import {
 import { Router } from '@angular/router'; // ✅ Importamos el Router
 import { UserService } from '../services/user.service';
 import { PlacesService, PlacePhoto as PlacePhotoModel } from '../services/places.service';
-import { IonicModule, AlertController } from '@ionic/angular';
+import { BoardsService } from '../services/boards.service';
+import { IonicModule, AlertController, AlertInput } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -59,6 +60,7 @@ export class HomePage implements OnInit {
   private router = inject(Router);
   private userService = inject(UserService);
   private placesService = inject(PlacesService);
+  private boardsService = inject(BoardsService);
   private alertCtrl = inject(AlertController);
   loading = true;
   quickViewImage?: string;
@@ -70,6 +72,55 @@ export class HomePage implements OnInit {
     // Obtener username real del servicio (si existe)
     const name = this.userService.getUsername();
     if (name) this.username = name;
+  }
+
+  /**
+   * Open a dialog to let the user choose or create a board and save the place to it.
+   * Uses AlertController as a simple modal for selection/creation.
+   */
+  async openSaveToBoard(place: PlacePhoto) {
+    const boards = this.boardsService.getBoards();
+    if (!boards || !boards.length) {
+      // no boards yet - prompt to create one
+      const { role } = await (await this.alertCtrl.create({
+        header: 'Crear álbum',
+        inputs: [ { name: 'name', placeholder: 'Nombre del álbum' } ],
+        buttons: [ { text: 'Cancelar', role: 'cancel' }, { text: 'Crear', role: 'confirm' } ]
+      })).present().then(() => ({ role: 'confirm' }));
+      // fallback simple creation flow: open native prompt (not ideal but keeps UI minimal)
+      const name = prompt('Nombre del nuevo álbum');
+      if (name && name.trim()) {
+        const b = this.boardsService.createBoard(name.trim());
+        this.boardsService.addPin(b.id, place.id);
+        const t = await this.alertCtrl.create({ message: 'Guardado en ' + b.name, buttons: ['OK'] });
+        await t.present();
+      }
+      return;
+    }
+
+    // Build radio inputs for existing boards
+  const inputs: AlertInput[] = boards.map(b => ({ type: 'radio' as const, label: b.name, value: b.id }));
+    const alert = await this.alertCtrl.create({
+      header: 'Guardar en álbum',
+      inputs: inputs,
+      buttons: [
+        { text: 'Nuevo', handler: () => {
+            const name = prompt('Nombre del nuevo álbum');
+            if (name && name.trim()) {
+              const nb = this.boardsService.createBoard(name.trim());
+              this.boardsService.addPin(nb.id, place.id);
+              this.alertCtrl.create({ message: 'Guardado en ' + nb.name, buttons: ['OK'] }).then(a=>a.present());
+            }
+          }
+        },
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Guardar', handler: (data) => {
+            if (data) { this.boardsService.addPin(data, place.id); this.alertCtrl.create({ message: 'Guardado', buttons: ['OK'] }).then(a=>a.present()); }
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   onSearchInput(e: any) {

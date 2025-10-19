@@ -1,0 +1,55 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goHome()" title="Inicio">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Lugares</ion-title>
+    <ion-buttons slot="end">
+      <ion-button title="Buscar" (click)="onSearchInput()">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <section class="countries">
+    <div class="countries-header">
+      <div>
+        <h3>Países</h3>
+        <small class="muted">Encuentra banderas y explora por país</small>
+      </div>
+      <ion-searchbar placeholder="Buscar país" [(ngModel)]="search" (ionInput)="onSearchInput()"></ion-searchbar>
+    </div>
+
+    <div class="flags">
+      <div class="flag" *ngFor="let c of filteredCountries">
+        <div class="flag-inner" (click)="showCountry(c)">
+          <img [src]="c.flagUrl" [alt]="c.name" />
+          <div class="name">{{c.name}}</div>
+        </div>
+        <ion-button fill="clear" size="small" class="mini-search" (click)="onSearchInput()">
+          <ion-icon name="search"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery">
+    <div class="section-header">
+      <h2>Lugares que podrías gustarte</h2>
+      <small class="muted">Explora lugares populares y recomendaciones</small>
+    </div>
+
+    <div class="grid">
+      <div class="card" *ngFor="let p of places">
+        <div class="img-wrap" (click)="openPlace(p)">
+          <ion-img [src]="p.imageUrl" alt="{{p.place}}"></ion-img>
+        </div>
+        <div class="caption">{{p.place}} <span class="loc">· {{p.location}}</span></div>
+      </div>
+    </div>
+  </section>
+</ion-content>

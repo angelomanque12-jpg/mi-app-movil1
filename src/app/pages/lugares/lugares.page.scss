@@ -1,0 +1,37 @@
+.gallery .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+.gallery .card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.gallery img { width: 100%; height: 120px; object-fit: cover; display:block; }
+.gallery .caption { padding: 8px; font-weight: 600; }
+
+.countries { margin-top: 20px; }
+.countries-header { display:flex; align-items:center; gap:8px; }
+.flags { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; }
+.flag { width:120px; text-align:center; padding:8px; border-radius:6px; background:white; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.flag img { width:64px; height:42px; object-fit:cover; display:block; margin:0 auto 8px; }
+.mini-search { margin-top:6px; }
+
+/* Improvements */
+.section-header { display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
+.muted { color: #6b6b6b; font-size: 12px; }
+.img-wrap { overflow:hidden; height:140px; display:block; }
+.img-wrap ion-img { width:100%; height:100%; object-fit:cover; transition: transform .28s ease; display:block; }
+.card:hover .img-wrap ion-img { transform: scale(1.04); }
+.caption { padding:10px; font-weight:600; }
+.loc { color:#888; font-weight:400; margin-left:6px; }
+
+.flag-inner { cursor:pointer; padding:6px; border-radius:6px; transition: transform .18s ease, box-shadow .18s ease; }
+.flag-inner:hover { transform: translateY(-6px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+
+@media (min-width: 800px) {
+  .gallery .grid { grid-template-columns: repeat(4, 1fr); }
+}
+
