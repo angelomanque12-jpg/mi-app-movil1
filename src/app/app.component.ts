@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, CameraDirection } from '@capacitor/camera';
 import { PlacesService } from './services/places.service';
 import { AlertController } from '@ionic/angular';
 import { UserService } from './services/user.service';
@@ -43,9 +43,10 @@ export class AppComponent {
       const photo = await Camera.getPhoto({
         resultType: CameraResultType.Base64,
         source: CameraSource.Camera,
-        quality: 80,
+        quality: 90,
         saveToGallery: false,
-        correctOrientation: true
+        correctOrientation: true,
+        webUseInput: false // Esto fuerza el uso de la cámara web en lugar del selector de archivos
       });
 
       if (!photo || !photo.base64String) return;
