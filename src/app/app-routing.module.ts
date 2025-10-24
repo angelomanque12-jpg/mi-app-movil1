@@ -10,8 +10,11 @@ const routes: Routes = [
   {
     path: 'place-detail/:id',
     loadChildren: () => import('./pages/place-detail/place-detail.module').then( m => m.PlaceDetailPageModule)
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./pages/error404/error404.page').then(m => m.Error404Page)
   }
-
 ];
 
 @NgModule({
