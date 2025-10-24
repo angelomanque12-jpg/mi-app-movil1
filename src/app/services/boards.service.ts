@@ -5,7 +5,7 @@ export interface Board {
   name: string;
   description?: string;
   owner?: string;
-  pins: string[]; // array of place ids
+  pins: string[]; // arreglo de IDs de lugares
 }
 
 @Injectable({ providedIn: 'root' })

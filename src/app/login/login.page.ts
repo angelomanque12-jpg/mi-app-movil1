@@ -1,115 +1,214 @@
+/**
+ * Componente de la página de login
+ * 
+ * Este componente maneja la interfaz de usuario para:
+ * - Inicio de sesión de usuarios existentes
+ * - Registro de nuevos usuarios
+ * - Recuperación de contraseña
+ */
+
 import { Component, inject } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
 
+// Decorador del componente que define sus metadatos
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'], 
-  standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule]
+  selector: 'app-login',            // Selector CSS para usar el componente
+  templateUrl: './login.page.html', // Plantilla HTML del componente
+  styleUrls: ['./login.page.scss'], // Estilos CSS del componente
+  standalone: true,                 // Indica que es un componente independiente
+  imports: [IonicModule, FormsModule, CommonModule] // Módulos necesarios
 })
 export class LoginPage {
-  username = '';
-  password = '';
-  showRegister = false;
-  newUsername = '';
-  newPassword = '';
+  // Variables para el formulario de inicio de sesión
+  username = '';    // Correo electrónico del usuario
+  password = '';    // Contraseña del usuario
 
-  // Forgot password state (mock flows)
-  showForgotRequest = false;
-  showForgotReset = false;
-  forgotUsername = '';
-  lastToken: string | null = null;
-  resetUsername = '';
-  resetToken = '';
-  resetPasswordValue = '';
+  // Variables para el formulario de registro
+  showRegister = false;   // Controla la visibilidad del formulario de registro
+  newUsername = '';       // Correo electrónico para el nuevo usuario
+  newPassword = '';       // Contraseña para el nuevo usuario
 
+  // Variables para la recuperación de contraseña
+  showForgotRequest = false;  // Controla la visibilidad del formulario de recuperación
+  forgotUsername = '';        // Correo electrónico para recuperación
+
+  // Servicios inyectados
   private router = inject(Router);
-  private userService = inject(UserService);
+  private firebaseAuth = inject(FirebaseAuthService);
+  private alertCtrl = inject(AlertController);
 
-  onSubmit() {
-    if (!this.userService.getUserExists(this.username)) {
-      alert('El usuario no existe');
-      return;
-    }
-    if (this.userService.validateUser(this.username, this.password)) {
-      this.userService.setUsername(this.username);
-      this.router.navigate(['/home']);
-    } else {
-      alert('Contraseña incorrecta');
+  /**
+   * Maneja el envío del formulario de inicio de sesión
+   * Intenta autenticar al usuario con Firebase usando sus credenciales
+   * Si tiene éxito, redirige a la página principal o a la URL de retorno
+   */
+  async onSubmit() {
+    try {
+      const user = await this.firebaseAuth.login(this.username, this.password);
+      if (user) {
+        const returnUrl = this.router.getCurrentNavigation()?.extractedUrl.queryParams['returnUrl'] || '/home';
+        this.router.navigate([returnUrl]);
+      }
+    } catch (error: any) {
+      const alert = await this.alertCtrl.create({
+        header: 'Error de acceso',
+        message: this.getErrorMessage(error.message) || 'No se pudo iniciar sesión. Por favor, inténtelo de nuevo.',
+        buttons: ['Aceptar']
+      });
+      await alert.present();
     }
   }
 
-  onRegister() {
+  /**
+   * Traduce los códigos de error de Firebase a mensajes amigables en español
+   * @param errorMessage Mensaje de error de Firebase
+   * @returns Mensaje de error traducido y formateado para el usuario
+   */
+  private getErrorMessage(errorMessage: string): string {
+    if (errorMessage.includes('user-not-found')) {
+      return 'No existe una cuenta con este correo electrónico';
+    }
+    if (errorMessage.includes('wrong-password')) {
+      return 'La contraseña es incorrecta';
+    }
+    if (errorMessage.includes('invalid-email')) {
+      return 'El formato del correo electrónico no es válido';
+    }
+    if (errorMessage.includes('too-many-requests')) {
+      return 'Demasiados intentos fallidos. Por favor, inténtelo más tarde';
+    }
+    return errorMessage;
+  }
+
+  /**
+   * Maneja el registro de un nuevo usuario
+   * Valida los campos requeridos y crea una nueva cuenta en Firebase
+   * Si tiene éxito, muestra un mensaje y redirige a la página principal
+   */
+  async onRegister() {
+    // Validación de campos requeridos
     if (!this.newUsername || !this.newPassword) {
-      alert('Debe ingresar un usuario y contraseña');
+      const alert = await this.alertCtrl.create({
+        header: 'Datos incompletos',
+        message: 'Por favor, ingrese un correo electrónico y una contraseña',
+        buttons: ['Aceptar']
+      });
+      await alert.present();
       return;
     }
-    if (this.userService.registerUser(this.newUsername, this.newPassword)) {
-      alert('Usuario registrado correctamente');
-      this.showRegister = false;
-      this.username = this.newUsername;
-      this.password = this.newPassword;
-    } else {
-      alert('El usuario ya existe');
+
+    try {
+      // Intenta crear el nuevo usuario en Firebase
+      const user = await this.firebaseAuth.register(this.newUsername, this.newPassword);
+      if (user) {
+        // Actualiza el estado y muestra mensaje de éxito
+        this.showRegister = false;
+        this.username = this.newUsername;
+        this.password = this.newPassword;
+        const alert = await this.alertCtrl.create({
+          header: 'Registro exitoso',
+          message: 'Tu cuenta ha sido creada correctamente',
+          buttons: ['Aceptar']
+        });
+        await alert.present();
+        this.router.navigate(['/home']);
+      }
+    } catch (error: any) {
+      // Maneja los errores de registro
+      const alert = await this.alertCtrl.create({
+        header: 'Error de registro',
+        message: this.getRegistrationErrorMessage(error.message) || 'No se pudo crear la cuenta. Por favor, inténtelo de nuevo.',
+        buttons: ['Aceptar']
+      });
+      await alert.present();
     }
   }
 
-  getLoggedUser(): string {
-    return this.userService.getUsername();
+  private getRegistrationErrorMessage(errorMessage: string): string {
+    if (errorMessage.includes('email-already-in-use')) {
+      return 'Ya existe una cuenta con este correo electrónico';
+    }
+    if (errorMessage.includes('invalid-email')) {
+      return 'El formato del correo electrónico no es válido';
+    }
+    if (errorMessage.includes('weak-password')) {
+      return 'La contraseña es demasiado débil. Debe tener al menos 6 caracteres';
+    }
+    return errorMessage;
   }
 
+  /**
+   * Muestra el formulario de recuperación de contraseña
+   * Reinicia el campo de correo electrónico
+   */
   openForgotPassword() {
-    // open the request modal by default
     this.showForgotRequest = true;
-    this.showForgotReset = false;
     this.forgotUsername = '';
-    this.lastToken = null;
   }
 
+  /**
+   * Cierra el formulario de recuperación de contraseña
+   * Limpia los campos del formulario
+   */
   closeForgot() {
     this.showForgotRequest = false;
-    this.showForgotReset = false;
     this.forgotUsername = '';
-    this.resetUsername = '';
-    this.resetToken = '';
-    this.resetPasswordValue = '';
-    this.lastToken = null;
   }
 
-  sendReset() {
+  /**
+   * Maneja el envío del formulario de recuperación de contraseña
+   * Valida el correo electrónico y envía el enlace de recuperación
+   * Muestra mensajes de éxito o error según corresponda
+   */
+  async sendReset() {
+    // Validación del campo de correo
     if (!this.forgotUsername) {
-      alert('Ingrese su usuario');
+      const alert = await this.alertCtrl.create({
+        header: 'Campo requerido',
+        message: 'Por favor, ingrese su correo electrónico para recuperar su contraseña',
+        buttons: ['Aceptar']
+      });
+      await alert.present();
       return;
     }
-    const token = this.userService.sendResetLink(this.forgotUsername);
-    if (!token) {
-      alert('Usuario no encontrado');
-      return;
+
+    try {
+      // Envía la solicitud de recuperación a Firebase
+      await this.firebaseAuth.resetPassword(this.forgotUsername);
+      // Muestra mensaje de éxito
+      const alert = await this.alertCtrl.create({
+        header: 'Recuperación iniciada',
+        message: 'Hemos enviado un enlace de recuperación a tu correo electrónico. Por favor, revisa tu bandeja de entrada y sigue las instrucciones.',
+        buttons: ['Aceptar']
+      });
+      await alert.present();
+      this.closeForgot();
+    } catch (error: any) {
+      // Maneja los errores de recuperación
+      const alert = await this.alertCtrl.create({
+        header: 'Error de recuperación',
+        message: this.getResetPasswordErrorMessage(error.message) || 'No se pudo enviar el correo de recuperación. Por favor, inténtelo de nuevo.',
+        buttons: ['Aceptar']
+      });
+      await alert.present();
     }
-    // show token for mock/testing and open reset panel
-    this.lastToken = token;
-    this.showForgotRequest = false;
-    this.showForgotReset = true;
-    this.resetUsername = this.forgotUsername;
   }
 
-  submitReset() {
-    if (!this.resetUsername || !this.resetToken || !this.resetPasswordValue) {
-      alert('Complete todos los campos');
-      return;
+  private getResetPasswordErrorMessage(errorMessage: string): string {
+    if (errorMessage.includes('user-not-found')) {
+      return 'No existe una cuenta asociada a este correo electrónico';
     }
-    const ok = this.userService.resetPassword(this.resetUsername, this.resetToken, this.resetPasswordValue);
-    if (ok) {
-      alert('Contraseña restablecida correctamente. Ahora puede iniciar sesión.');
-      this.closeForgot();
-    } else {
-      alert('Token inválido o usuario incorrecto');
+    if (errorMessage.includes('invalid-email')) {
+      return 'El formato del correo electrónico no es válido';
     }
+    if (errorMessage.includes('too-many-requests')) {
+      return 'Demasiados intentos. Por favor, espere unos minutos antes de intentarlo de nuevo';
+    }
+    return errorMessage;
   }
 }
 

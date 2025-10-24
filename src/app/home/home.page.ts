@@ -15,6 +15,7 @@ import { IonicModule, AlertController, AlertInput } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+
 interface PlacePhoto extends PlacePhotoModel {}
 
 @Component({
@@ -50,6 +51,8 @@ interface PlacePhoto extends PlacePhotoModel {}
   ]
 })
 export class HomePage implements OnInit {
+  // Flag para controlar estado de la cámara
+  capturing = false;
 
   places: PlacePhoto[] = [];
   username: string = 'Usuario';
@@ -236,6 +239,8 @@ export class HomePage implements OnInit {
   }
 
   closeQuickView() { this.quickViewImage = undefined; }
+
+
 
   // ✅ Nueva función para navegar al detalle
   onPhotoClick(place: PlacePhoto) {

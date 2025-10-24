@@ -1,19 +1,19 @@
 Where to put real images for the app
 
-This folder is intended for static images you want to ship with the app.
+Esta carpeta está destinada para imágenes estáticas que deseas incluir con la aplicación.
 
-1) Local assets (recommended for small, static sets)
-- Place image files under: `src/assets/images/`
-- Reference them from code / services / templates exactly as:
-  - `assets/images/my-photo.jpg`
-  - Example: in `src/app/services/places.service.ts` set `imageUrl: 'assets/images/my-photo.jpg'`
-- During development `ng serve` will serve assets at `/assets/...`.
-- When you run `ng build` the assets folder is copied into the `dist/` output and paths remain valid.
+1) Activos locales (recomendado para conjuntos pequeños y estáticos)
+- Coloca los archivos de imagen en: `src/assets/images/`
+- Referencialos desde el código / servicios / plantillas exactamente como:
+  - `assets/images/mi-foto.jpg`
+  - Ejemplo: en `src/app/services/places.service.ts` establece `imageUrl: 'assets/images/mi-foto.jpg'`
+- Durante el desarrollo, `ng serve` servirá los activos en `/assets/...`.
+- Cuando ejecutes `ng build`, la carpeta de activos se copia en la salida `dist/` y las rutas permanecen válidas.
 
-Notes and best practices for local assets:
-- Keep images reasonably sized. Large images increase bundle size and memory usage.
-- Prefer WebP or optimized JPEG/PNG. Use tools like `imagemin`, `sharp`, or online compressors.
-- For many images (user uploads) don't ship them as assets — use remote storage.
+Notas y mejores prácticas para activos locales:
+- Mantén las imágenes con un tamaño razonable. Las imágenes grandes aumentan el tamaño del bundle y el uso de memoria.
+- Prefiere WebP o JPEG/PNG optimizados. Usa herramientas como `imagemin`, `sharp`, o compresores en línea.
+- Para muchas imágenes (cargas de usuarios) no las envíes como activos — usa almacenamiento remoto.
 
 2) Remote images (CDN / hosted)
 - Use full HTTPS URLs for remote images, e.g. `https://example.com/photos/123.jpg`.

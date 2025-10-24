@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-// Use dynamic imports for Capacitor modules to allow building without them during development
+// Usar importaciones dinámicas para los módulos de Capacitor para permitir la compilación sin ellos durante el desarrollo
 
 export interface SavedPhoto {
   id: string;
-  filepath: string; // filesystem path or webPath
-  webviewPath?: string; // path usable in <img>
+  filepath: string; // ruta del sistema de archivos o webPath
+  webviewPath?: string; // ruta utilizable en etiquetas <img>
   createdAt: string;
-  latitude?: number;
-  longitude?: number;
+  latitude?: number;  // latitud de la ubicación de la foto
+  longitude?: number; // longitud de la ubicación de la foto
 }
 
 @Injectable({ providedIn: 'root' })
@@ -18,25 +18,25 @@ export class PhotoService {
 
   async saveCapturedPhoto(photo: any): Promise<SavedPhoto> {
     /**
-     * Save a captured photo.
+     * Guarda una foto capturada.
      *
-     * Behavior:
-     * - Converts the incoming `photo` (which may be a Capacitor Camera result object or
-     *   a web fallback object with `webPath`/`base64String`) into a base64 data URL.
-     * - Creates a `SavedPhoto` entry and persists a list to localStorage under `STORAGE_KEY`.
+     * Comportamiento:
+     * - Convierte la `photo` entrante (que puede ser un objeto resultado de Capacitor Camera o
+     *   un objeto de respaldo web con `webPath`/`base64String`) en una URL de datos base64.
+     * - Crea una entrada `SavedPhoto` y persiste una lista en localStorage bajo `STORAGE_KEY`.
      *
-     * Inputs:
-     * - photo: object { webPath?: string, base64String?: string } or Capacitor Camera result
+     * Entradas:
+     * - photo: objeto { webPath?: string, base64String?: string } o resultado de Capacitor Camera
      *
-     * Output:
-     * - Returns the SavedPhoto object that was stored.
+     * Salida:
+     * - Devuelve el objeto SavedPhoto que fue almacenado.
      *
-     * Error modes:
-     * - If fetch/readAsBase64 fails this will throw (caller should handle UI feedback).
+     * Modos de error:
+     * - Si fetch/readAsBase64 falla, esto lanzará una excepción (el llamador debe manejar la retroalimentación de la UI).
      */
     const base64Data = await this.readAsBase64(photo);
     const fileName = `photo_${new Date().getTime()}.jpeg`;
-    // For web fallback we persist as data URL in localStorage (no Filesystem dependency)
+    // Para el respaldo web, persistimos como URL de datos en localStorage (sin dependencia del sistema de archivos)
     const dataUrl = `data:image/jpeg;base64,${base64Data}`;
     const saved: SavedPhoto = {
       id: fileName,
@@ -53,13 +53,13 @@ export class PhotoService {
 
   async readAsBase64(photo: any) {
     /**
-     * Read the provided photo as a base64 string.
+     * Lee la foto proporcionada como una cadena base64.
      *
-     * The function attempts to `fetch()` the `photo.webPath` and convert the returned Blob
-     * into a base64 string. This supports both native plugin results (which provide a
-     * webPath) and data-URLs created from file inputs.
+     * La función intenta hacer `fetch()` del `photo.webPath` y convertir el Blob devuelto
+     * en una cadena base64. Esto soporta tanto resultados de plugins nativos (que proporcionan un
+     * webPath) como URLs de datos creadas desde entradas de archivo.
      *
-     * Returns: base64 string without data:<mime>;base64, prefix.
+     * Devuelve: cadena base64 sin el prefijo data:<mime>;base64,
      */
     // fetch the photo, read as blob, convert to base64
     const response = await fetch(photo.webPath || '');
@@ -73,7 +73,7 @@ export class PhotoService {
     reader.onerror = reject;
     reader.onload = () => {
       const res = reader.result as string;
-      // remove prefix
+      // eliminar prefijo
       const idx = res.indexOf(',');
       resolve(res.substring(idx + 1));
     };

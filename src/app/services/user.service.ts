@@ -1,83 +1,79 @@
-import { Injectable } from '@angular/core';
+/**
+ * Servicio de gestión de usuarios
+ * 
+ * Este servicio maneja el estado del usuario actual y proporciona métodos
+ * para gestionar la autenticación a través del servicio de Firebase.
+ * Mantiene la información del usuario actual y su estado de autenticación.
+ */
 
+import { Injectable } from '@angular/core';
+import { FirebaseAuthService } from './firebase-auth.service';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+
+// Indica que este servicio es inyectable a nivel raíz de la aplicación
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private username = '';
-  private users: { [key: string]: string } = {};
+  /** Usuario actualmente autenticado */
+  private currentUser: User | null = null;
 
-  constructor() {
-    const usersData = localStorage.getItem('users');
-    if (usersData) {
-      this.users = JSON.parse(usersData);
-    }
-    const usernameData = localStorage.getItem('username');
-    if (usernameData) {
-      this.username = usernameData;
-    }
+  /**
+   * Constructor del servicio
+   * Inicializa el observador de cambios en el estado de autenticación
+   */
+  constructor(private firebaseAuth: FirebaseAuthService) {
+    // Escuchar cambios en el estado de autenticación
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      this.currentUser = user;
+      if (user) {
+        localStorage.setItem('authenticated', 'true');
+      } else {
+        localStorage.removeItem('authenticated');
+      }
+    });
   }
 
-  setUsername(name: string) {
-    this.username = name;
-    localStorage.setItem('username', name);
+  /**
+   * Verifica si hay un usuario autenticado
+   * @returns true si hay un usuario autenticado, false en caso contrario
+   */
+  isAuthenticated(): boolean {
+    return !!this.currentUser || localStorage.getItem('authenticated') === 'true';
   }
 
+  /**
+   * Obtiene el correo electrónico del usuario actual
+   * @returns el correo electrónico del usuario o cadena vacía si no hay usuario
+   */
   getUsername(): string {
-    return this.username;
+    return this.currentUser?.email || '';
   }
 
-  registerUser(username: string, password: string): boolean {
-    if (this.users[username]) {
+  /**
+   * Intenta iniciar sesión con las credenciales proporcionadas
+   * @param email Correo electrónico del usuario
+   * @param password Contraseña del usuario
+   * @returns true si el inicio de sesión es exitoso, false en caso contrario
+   */
+  async login(email: string, password: string): Promise<boolean> {
+    try {
+      const user = await this.firebaseAuth.login(email, password);
+      return !!user;
+    } catch (error) {
       return false;
     }
-    this.users[username] = password;
-    localStorage.setItem('users', JSON.stringify(this.users));
-    return true;
   }
 
-  validateUser(username: string, password: string): boolean {
-    return this.users[username] === password;
-  }
-
-  getUserExists(username: string): boolean {
-    return !!this.users[username];
-  }
-
-  logout() {
-    /**
-     * Log the current user out.
-     *
-     * Behavior:
-     * - Clears the in-memory `username` and removes the persisted `username` key from localStorage.
-     * - This function intentionally does not perform navigation; callers should redirect (e.g. HomePage confirms
-     *   logout and performs router navigation or a hard redirect).
-     *
-     * Side-effects: localStorage is modified.
-     */
-    this.username = '';
-    localStorage.removeItem('username');
-  }
-
-  // Mock: generate a reset token and 'send' it (store in localStorage)
-  sendResetLink(username: string): string | null {
-    if (!this.users[username]) return null;
-    const token = Math.random().toString(36).substring(2, 9);
-    const tokens = JSON.parse(localStorage.getItem('resetTokens') || '{}');
-    tokens[username] = token;
-    localStorage.setItem('resetTokens', JSON.stringify(tokens));
-    // In a real app, you would email the token; here we return it so UI can display for testing
-    return token;
-  }
-
-  // Mock: reset password if token matches stored token
-  resetPassword(username: string, token: string, newPassword: string): boolean {
-    const tokens = JSON.parse(localStorage.getItem('resetTokens') || '{}');
-    if (tokens[username] && tokens[username] === token) {
-      this.users[username] = newPassword;
-      localStorage.setItem('users', JSON.stringify(this.users));
-      delete tokens[username];
-      localStorage.setItem('resetTokens', JSON.stringify(tokens));
-      return true;
+  /**
+   * Cierra la sesión del usuario actual
+   * Elimina el estado de autenticación del almacenamiento local
+   */
+  async logout() {
+    try {
+      await this.firebaseAuth.logout();
+      localStorage.removeItem('authenticated');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
     }
-    return false;
   }
 }
