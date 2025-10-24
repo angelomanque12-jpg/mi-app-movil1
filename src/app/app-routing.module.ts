@@ -5,10 +5,10 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule) },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomePageModule) },
-  { path: 'lugares', loadChildren: () => import('./pages/lugares/lugares.module').then(m => m.LugaresPageModule) },
+  { path: 'lugares', loadComponent: () => import('./lugares/lugares.page').then(m => m.LugaresPage) },
   { path: 'capture', loadChildren: () => import('./pages/capture/capture.module').then(m => m.CapturePageModule) },
   {
-    path: 'place-detail',
+    path: 'place-detail/:id',
     loadChildren: () => import('./pages/place-detail/place-detail.module').then( m => m.PlaceDetailPageModule)
   }
 

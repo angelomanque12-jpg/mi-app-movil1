@@ -6,11 +6,9 @@
       </ion-button>
     </ion-buttons>
     <ion-title>Lugares</ion-title>
-    <ion-buttons slot="end">
-      <ion-button title="Buscar" (click)="onSearchInput()">
-        <ion-icon slot="icon-only" name="search"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Buscar lugares o países" [(ngModel)]="search" (ionInput)="onSearchInput()" animated></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
