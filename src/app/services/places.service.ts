@@ -53,6 +53,7 @@ export class PlacesService {
   ];
 
   private placesSubject = new BehaviorSubject<PlacePhoto[]>(this.places.slice());
+  private selectedCountry = new BehaviorSubject<string | null>(null);
 
   getPlaces(): Observable<PlacePhoto[]> {
     /**
@@ -62,6 +63,26 @@ export class PlacesService {
      * Output: Observable<PlacePhoto[]> (emits a shallow copy of internal array)
      */
     return this.placesSubject.asObservable();
+  }
+
+  filterByCountry(country: string | null) {
+    /**
+     * Filtra los lugares por país.
+     * Si country es null, muestra todos los lugares.
+     */
+    this.selectedCountry.next(country);
+    if (country === null) {
+      this.placesSubject.next(this.places.slice());
+    } else {
+      const filteredPlaces = this.places.filter(place => 
+        place.location.includes(country)
+      );
+      this.placesSubject.next(filteredPlaces);
+    }
+  }
+
+  getCurrentCountry(): Observable<string | null> {
+    return this.selectedCountry.asObservable();
   }
 
   getPlaceById(id: string): Observable<PlacePhoto | undefined> {

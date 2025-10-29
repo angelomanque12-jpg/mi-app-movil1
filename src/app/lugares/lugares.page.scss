@@ -28,8 +28,21 @@
 .caption { padding:10px; font-weight:600; }
 .loc { color:#888; font-weight:400; margin-left:6px; }
 
-.flag-inner { cursor:pointer; padding:6px; border-radius:6px; transition: transform .18s ease, box-shadow .18s ease; }
-.flag-inner:hover { transform: translateY(-6px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+.flag-inner { 
+  cursor:pointer; 
+  padding:6px; 
+  border-radius:6px; 
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease; 
+}
+.flag-inner:hover { 
+  transform: translateY(-6px); 
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12); 
+}
+.flag.selected .flag-inner {
+  background-color: #e8f3ff;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
 
 @media (min-width: 800px) {
   .gallery .grid { grid-template-columns: repeat(4, 1fr); }

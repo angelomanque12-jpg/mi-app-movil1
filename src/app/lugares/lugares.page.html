@@ -23,14 +23,11 @@
     </div>
 
     <div class="flags">
-      <div class="flag" *ngFor="let c of filteredCountries">
+      <div class="flag" *ngFor="let c of filteredCountries" [class.selected]="selectedCountry === c.name">
         <div class="flag-inner" (click)="showCountry(c)">
           <img [src]="c.flagUrl" [alt]="c.name" />
           <div class="name">{{c.name}}</div>
         </div>
-        <ion-button fill="clear" size="small" class="mini-search" (click)="onSearchInput()">
-          <ion-icon name="search"></ion-icon>
-        </ion-button>
       </div>
     </div>
   </section>

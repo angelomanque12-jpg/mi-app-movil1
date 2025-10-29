@@ -86,20 +86,26 @@ export class LugaresPage {
 
   // Función para seleccionar un país
   showCountry(country: CountryItem) {
-    this.selectedCountry = country.name;
-    
-    // Filtrar lugares por el país seleccionado
-    this.filteredPlaces = this.allPlaces.filter(place => 
-      place.location.toLowerCase().includes(country.name.toLowerCase())
-    );
-
-    // Si no hay lugares para este país, mostrar un mensaje
-    if (this.filteredPlaces.length === 0) {
-      this.alertCtrl.create({
-        header: country.name,
-        message: 'No hay lugares registrados para este país todavía.',
-        buttons: ['OK']
-      }).then(alert => alert.present());
+    if (this.selectedCountry === country.name) {
+      // Si se selecciona el mismo país, deseleccionarlo
+      this.selectedCountry = null;
+      this.placesService.filterByCountry(null);
+      this.places = this.recommendedPlaces;
+    } else {
+      this.selectedCountry = country.name;
+      this.placesService.filterByCountry(country.name);
+      
+      // Actualizar la lista de lugares filtrados
+      this.placesService.getPlaces().subscribe(filteredPlaces => {
+        this.places = filteredPlaces;
+        if (filteredPlaces.length === 0) {
+          this.alertCtrl.create({
+            header: country.name,
+            message: 'No hay lugares registrados para este país todavía.',
+            buttons: ['OK']
+          }).then(alert => alert.present());
+        }
+      });
     }
   }
 
