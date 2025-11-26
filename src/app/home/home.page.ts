@@ -11,6 +11,7 @@ import { Router } from '@angular/router'; // ✅ Importamos el Router
 import { UserService } from '../services/user.service';
 import { PlacesService, PlacePhoto as PlacePhotoModel } from '../services/places.service';
 import { BoardsService } from '../services/boards.service';
+import { GeolocationService } from '../services/geolocation.service';
 import { IonicModule, AlertController, AlertInput } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -64,17 +65,27 @@ export class HomePage implements OnInit {
   private userService = inject(UserService);
   private placesService = inject(PlacesService);
   private boardsService = inject(BoardsService);
+  private geolocationService = inject(GeolocationService);
   private alertCtrl = inject(AlertController);
   loading = true;
   quickViewImage?: string;
   // track images that failed to load to avoid flicker/retry loops
   imageFailed: Record<string, boolean> = {};
+  locationPermissionStatus: string = 'unknown';
 
   ngOnInit() {
-  this.placesService.getPlaces().subscribe(list => { this.places = list; this.filteredPlaces = list.slice(); this.loading = false; });
+    this.placesService.getPlaces().subscribe(list => { 
+      this.places = list; 
+      this.filteredPlaces = list.slice(); 
+      this.loading = false; 
+    });
+
     // Obtener username real del servicio (si existe)
     const name = this.userService.getUsername();
     if (name) this.username = name;
+
+    // Verificar permisos de ubicación
+    this.checkLocationPermission();
   }
 
   /**
@@ -292,6 +303,69 @@ export class HomePage implements OnInit {
         // fallback in case of unexpected error
         window.location.href = '/login';
       });
+    }
+  }
+
+  /**
+   * Verifica permisos de ubicación y obtiene la ubicación actual
+   */
+  async checkLocationPermission() {
+    const hasPermission = await this.geolocationService.checkPermissions();
+    
+    if (hasPermission) {
+      this.locationPermissionStatus = 'granted';
+      // Actualizar lugares con distancias
+      await this.placesService.refreshPlaces();
+    } else {
+      this.locationPermissionStatus = 'denied';
+      // Preguntar al usuario si quiere habilitar ubicación
+      this.showLocationPermissionAlert();
+    }
+  }
+
+  /**
+   * Muestra alerta para solicitar permisos de ubicación
+   */
+  private async showLocationPermissionAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Ubicación',
+      message: '¿Quieres habilitar la ubicación para ver distancias a los lugares?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: async () => {
+            const granted = await this.geolocationService.requestPermissions();
+            if (granted) {
+              this.locationPermissionStatus = 'granted';
+              await this.placesService.refreshPlaces();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
+  }
+
+  /**
+   * Obtiene información de distancia para un lugar
+   */
+  getDistanceInfo(place: PlacePhoto): { distance: string; available: boolean } {
+    return this.placesService.getDistanceInfo(place);
+  }
+
+  /**
+   * Refresca los lugares y actualiza las distancias
+   */
+  async refreshPlaces(event?: any) {
+    await this.placesService.refreshPlaces();
+    
+    if (event) {
+      event.target.complete();
     }
   }
 }

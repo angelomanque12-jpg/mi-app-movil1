@@ -3,6 +3,19 @@
   text-align: center;
 }
 
+.location-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.location-status ion-button {
+  --height: 32px;
+  font-size: 0.8rem;
+}
+
 .places-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -43,6 +56,42 @@
 .place-title {
   margin: 0 0 6px 0;
   font-size: 1.05rem;
+}
+
+.distance-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.distance-info ion-icon {
+  font-size: 0.9rem;
+}
+
+.place-description {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.place-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .meta {

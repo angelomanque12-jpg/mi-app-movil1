@@ -23,9 +23,40 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshPlaces($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Tira para actualizar distancias"
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <div class="home-header">
     <h2>¡Hola, {{ username }}!</h2>
     <p>Explora fotos agrupadas por lugar. Toca una imagen para ver más.</p>
+    
+    <!-- Estado de ubicación y botón de actualización -->
+    <div class="location-status" *ngIf="locationPermissionStatus !== 'unknown'">
+      <ion-button 
+        *ngIf="locationPermissionStatus === 'granted'" 
+        fill="outline" 
+        size="small" 
+        (click)="refreshPlaces()">
+        <ion-icon name="refresh-outline" slot="start"></ion-icon>
+        Actualizar distancias
+      </ion-button>
+      
+      <ion-button 
+        *ngIf="locationPermissionStatus === 'denied'" 
+        fill="outline" 
+        size="small" 
+        color="warning"
+        (click)="checkLocationPermission()">
+        <ion-icon name="location-outline" slot="start"></ion-icon>
+        Habilitar ubicación
+      </ion-button>
+    </div>
   </div>
 
   <div class="places-grid" [@listAnimation]>
@@ -56,6 +87,15 @@
           <div class="meta">
             <div class="rating">{{ p.rating }} ★</div>
             <div class="location">{{ p.location }}</div>
+          </div>
+          <!-- Nueva información de distancia y descripción -->
+          <div class="location-info" *ngIf="getDistanceInfo(p).available">
+            <ion-icon name="location-outline"></ion-icon>
+            <span class="distance">{{ getDistanceInfo(p).distance }}</span>
+          </div>
+          <p class="description" *ngIf="p.description">{{ p.description }}</p>
+          <div class="tags" *ngIf="p.tags && p.tags.length">
+            <ion-chip *ngFor="let tag of p.tags.slice(0, 3)" size="small" color="primary">{{ tag }}</ion-chip>
           </div>
           <div class="author">Subido por: {{ p.user }}</div>
         </div>
