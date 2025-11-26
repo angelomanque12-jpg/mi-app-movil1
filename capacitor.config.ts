@@ -8,6 +8,11 @@ const config: CapacitorConfig = {
     Camera: {
       permitAudio: false,
       presentationStyle: 'fullscreen'
+    },
+    Geolocation: {
+      permissions: {
+        location: 'always'
+      }
     }
   },
   server: {
