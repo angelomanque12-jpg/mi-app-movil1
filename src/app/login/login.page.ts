@@ -7,11 +7,11 @@
  * - Recuperación de contraseña
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseAuthService } from '../services/firebase-auth.service';
 
 // Decorador del componente que define sus metadatos
@@ -22,7 +22,7 @@ import { FirebaseAuthService } from '../services/firebase-auth.service';
   standalone: true,                 // Indica que es un componente independiente
   imports: [IonicModule, FormsModule, CommonModule] // Módulos necesarios
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   // Variables para el formulario de inicio de sesión
   username = '';    // Correo electrónico del usuario
   password = '';    // Contraseña del usuario
@@ -36,10 +36,21 @@ export class LoginPage {
   showForgotRequest = false;  // Controla la visibilidad del formulario de recuperación
   forgotUsername = '';        // Correo electrónico para recuperación
 
+  // Variable para almacenar la URL de retorno
+  private returnUrl = '/home';
+
   // Servicios inyectados
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private firebaseAuth = inject(FirebaseAuthService);
   private alertCtrl = inject(AlertController);
+
+  ngOnInit() {
+    // Obtener la URL de retorno desde los query parameters
+    this.route.queryParams.subscribe(params => {
+      this.returnUrl = params['returnUrl'] || '/home';
+    });
+  }
 
   /**
    * Maneja el envío del formulario de inicio de sesión
@@ -50,8 +61,7 @@ export class LoginPage {
     try {
       const user = await this.firebaseAuth.login(this.username, this.password);
       if (user) {
-        const returnUrl = this.router.getCurrentNavigation()?.extractedUrl.queryParams['returnUrl'] || '/home';
-        this.router.navigate([returnUrl]);
+        this.router.navigate([this.returnUrl]);
       }
     } catch (error: any) {
       const alert = await this.alertCtrl.create({
