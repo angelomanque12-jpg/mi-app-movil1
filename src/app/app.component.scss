@@ -35,39 +35,88 @@
   -webkit-tap-highlight-color: transparent;
   position: relative;
   z-index: 10000;
+  
+  /* Estilos específicos para elementos button */
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  
   /* Asegurar que sea clickeable */
-  pointer-events: auto;
+  pointer-events: auto !important;
   touch-action: manipulation;
   
   /* Área de click más grande */
   &::before {
     content: '';
     position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
     z-index: -1;
+    border-radius: 20px;
+    /* Área invisible para clics más fáciles */
+  }
+  
+  /* Estados de interacción mejorados */
+  &:hover:not(:disabled) {
+    transform: scale(1.05);
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 12px;
+    
+    ion-icon, span {
+      color: #007bff;
+    }
+  }
+  
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+    background: rgba(0, 123, 255, 0.2);
+    border-radius: 12px;
+    
+    ion-icon, span {
+      color: #0056b3;
+    }
+  }
+  
+  /* Estado deshabilitado */
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  /* Enfoque para accesibilidad */
+  &:focus:not(:disabled) {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+  
+  /* Efectos de responsive touch */
+  @media (max-width: 768px) {
+    min-width: 60px;
+    min-height: 55px;
+    
+    &::before {
+      top: -15px;
+      left: -15px;
+      right: -15px;
+      bottom: -15px;
+    }
   }
 }
 
-.nav-button:hover {
-  transform: scale(1.1);
-  background: rgba(0, 123, 255, 0.1);
-  border-radius: 12px;
-}
-
-.nav-button:active {
-  transform: scale(0.95);
-  background: rgba(0, 123, 255, 0.2);
-  border-radius: 12px;
-}
-
-/* Clase para feedback de click */
+/* Clase para feedback de click - MÁS PROMINENTE */
 .nav-button-clicked {
-  transform: scale(0.9) !important;
-  background: rgba(0, 123, 255, 0.3) !important;
+  transform: scale(0.85) !important;
+  background: rgba(0, 123, 255, 0.4) !important;
   border-radius: 12px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  
+  ion-icon, span {
+    color: #0056b3 !important;
+  }
 }
 
 .nav-button ion-icon {

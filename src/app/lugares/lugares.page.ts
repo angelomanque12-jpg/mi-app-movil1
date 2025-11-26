@@ -41,10 +41,56 @@ export class LugaresPage {
       this.allPlaces = list;
       this.recommendedPlaces = list.slice(0, 6); // Mostrar 6 lugares recomendados
       this.places = this.recommendedPlaces; // Inicialmente mostrar lugares recomendados
+      
+      // Generar lista de países dinámicamente basada en los lugares reales
+      this.generateCountriesList(list);
     });
+  }
+  
+  // Método para generar la lista de países basada en los datos reales
+  private generateCountriesList(places: PlacePhoto[]) {
+    // Extraer países únicos de los lugares
+    const uniqueCountries = new Set<string>();
+    places.forEach(place => {
+      if (place.country) {
+        uniqueCountries.add(place.country);
+      }
+    });
+    
+    // Crear la lista de países con sus banderas
+    this.countries = Array.from(uniqueCountries).map(countryName => {
+      // Obtener código de país de 2 letras basado en el nombre
+      const countryCode = this.getCountryCode(countryName);
+      return {
+        code: countryCode,
+        name: countryName,
+        flagUrl: this.countryFlags[countryName] || `https://flagcdn.com/w80/${countryCode}.png`
+      };
+    }).sort((a, b) => a.name.localeCompare(b.name)); // Ordenar alfabéticamente
     
     // Inicializar la lista filtrada de países
     this.filteredCountries = this.countries;
+  }
+  
+  // Método auxiliar para obtener código de país
+  private getCountryCode(countryName: string): string {
+    const countryCodes: { [key: string]: string } = {
+      'Chile': 'cl',
+      'Peru': 'pe',
+      'Bolivia': 'bo', 
+      'Argentina': 'ar',
+      'Ecuador': 'ec',
+      'Venezuela': 've',
+      'Brazil': 'br',
+      'Colombia': 'co',
+      'New Zealand': 'nz',
+      'France': 'fr',
+      'Canada': 'ca',
+      'Greece': 'gr',
+      'USA': 'us'
+    };
+    
+    return countryCodes[countryName] || countryName.toLowerCase().substring(0, 2);
   }
   
   // Método para manejar la búsqueda
@@ -57,18 +103,19 @@ export class LugaresPage {
       this.placesService.filterByCountry(null);
     }
     
-    // Filtrar países
+    // Filtrar países basado en los países reales disponibles
     this.filteredCountries = this.countries.filter(country =>
       country.name.toLowerCase().includes(searchTerm)
     );
     
-    // Filtrar lugares
+    // Filtrar lugares usando los mismos criterios que el home
     if (searchTerm) {
       this.places = this.allPlaces.filter(place =>
         place.place.toLowerCase().includes(searchTerm) ||
         place.location.toLowerCase().includes(searchTerm) ||
         (place.country && place.country.toLowerCase().includes(searchTerm)) ||
-        (place.tags && place.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+        (place.tags && place.tags.some(tag => tag.toLowerCase().includes(searchTerm))) ||
+        (place.description && place.description.toLowerCase().includes(searchTerm))
       );
     } else {
       // Si no hay término de búsqueda, mostrar lugares recomendados
@@ -77,21 +124,25 @@ export class LugaresPage {
     }
   }
 
-  // Lista de países con sus banderas (actualizada para coincidir con los datos reales)
-  countries: CountryItem[] = [
-    { code: 'cl', name: 'Chile', flagUrl: 'https://flagcdn.com/w80/cl.png' },
-    { code: 'pe', name: 'Peru', flagUrl: 'https://flagcdn.com/w80/pe.png' },
-    { code: 'bo', name: 'Bolivia', flagUrl: 'https://flagcdn.com/w80/bo.png' },
-    { code: 'ar', name: 'Argentina', flagUrl: 'https://flagcdn.com/w80/ar.png' },
-    { code: 'ec', name: 'Ecuador', flagUrl: 'https://flagcdn.com/w80/ec.png' },
-    { code: 've', name: 'Venezuela', flagUrl: 'https://flagcdn.com/w80/ve.png' },
-    { code: 'br', name: 'Brazil', flagUrl: 'https://flagcdn.com/w80/br.png' },
-    { code: 'nz', name: 'New Zealand', flagUrl: 'https://flagcdn.com/w80/nz.png' },
-    { code: 'fr', name: 'France', flagUrl: 'https://flagcdn.com/w80/fr.png' },
-    { code: 'ca', name: 'Canada', flagUrl: 'https://flagcdn.com/w80/ca.png' },
-    { code: 'gr', name: 'Greece', flagUrl: 'https://flagcdn.com/w80/gr.png' },
-    { code: 'us', name: 'USA', flagUrl: 'https://flagcdn.com/w80/us.png' }
-  ];
+  // Lista de países basada en los datos reales de lugares
+  countries: CountryItem[] = [];
+  
+  // Países de referencia con sus códigos de bandera
+  private countryFlags: { [key: string]: string } = {
+    'Chile': 'https://flagcdn.com/w80/cl.png',
+    'Peru': 'https://flagcdn.com/w80/pe.png', 
+    'Bolivia': 'https://flagcdn.com/w80/bo.png',
+    'Argentina': 'https://flagcdn.com/w80/ar.png',
+    'Ecuador': 'https://flagcdn.com/w80/ec.png',
+    'Venezuela': 'https://flagcdn.com/w80/ve.png',
+    'Brazil': 'https://flagcdn.com/w80/br.png',
+    'Colombia': 'https://flagcdn.com/w80/co.png',
+    'New Zealand': 'https://flagcdn.com/w80/nz.png',
+    'France': 'https://flagcdn.com/w80/fr.png',
+    'Canada': 'https://flagcdn.com/w80/ca.png',
+    'Greece': 'https://flagcdn.com/w80/gr.png',
+    'USA': 'https://flagcdn.com/w80/us.png'
+  };
 
   goHome() { 
     console.log('Navegando a Home desde Lugares...');
@@ -135,21 +186,25 @@ export class LugaresPage {
       this.selectedCountry = country.name;
       this.placesService.filterByCountry(country.name);
       
-      // Actualizar la lista de lugares filtrados
-      this.placesService.getPlaces().subscribe(filteredPlaces => {
-        this.places = filteredPlaces;
-        if (filteredPlaces.length === 0) {
-          this.alertCtrl.create({
-            header: country.name,
-            message: 'No hay lugares registrados para este país todavía.',
-            buttons: ['OK']
-          }).then(alert => alert.present());
-          
-          // Volver a mostrar lugares recomendados si no hay resultados
-          this.selectedCountry = null;
-          this.places = this.recommendedPlaces;
-        }
-      });
+      // Filtrar lugares directamente de allPlaces para mayor consistencia
+      const filteredPlaces = this.allPlaces.filter(place => 
+        place.country === country.name || place.location.includes(country.name)
+      );
+      
+      this.places = filteredPlaces;
+      
+      if (filteredPlaces.length === 0) {
+        this.alertCtrl.create({
+          header: country.name,
+          message: 'No hay lugares registrados para este país todavía.',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+        
+        // Volver a mostrar lugares recomendados si no hay resultados
+        this.selectedCountry = null;
+        this.places = this.recommendedPlaces;
+        this.placesService.filterByCountry(null);
+      }
     }
   }
 

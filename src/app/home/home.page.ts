@@ -581,10 +581,6 @@ export class HomePage implements OnInit {
   }
 
   // Métodos usados en la plantilla
-  goToPerfil() {
-    this.router.navigate(['/profile']);
-  }
-
   goToConfig() {
     this.router.navigate(['/settings']);
   }

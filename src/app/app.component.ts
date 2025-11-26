@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { Camera, CameraResultType, CameraSource, CameraDirection } from '@capacitor/camera';
 import { PlacesService } from './services/places.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { UserService } from './services/user.service';
-import { BoardsService } from './services/boards.service';
 
 @Component({
   selector: 'app-root',
@@ -15,78 +13,156 @@ import { BoardsService } from './services/boards.service';
 })
 export class AppComponent {
   showBottomNav = true;
-  capturing = false;
+  
+  // Servicios inyectados
   private placesService = inject(PlacesService);
   private userService = inject(UserService);
-  private boardsService = inject(BoardsService);
   private alertCtrl = inject(AlertController);
+  private loadingCtrl = inject(LoadingController);
 
   constructor(private router: Router) {
-    // Mostrar barra de navegación inferior en home y lugares
+    console.log('🚀 AppComponent inicializado');
+    
+    // Configurar navegación inferior con logging detallado
     router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
       const url = e.urlAfterRedirects || e.url;
-      this.showBottomNav = url === '/home' || url.startsWith('/home/') || url === '/lugares' || url.startsWith('/lugares/');
+      // Mostrar navegación solo en páginas principales autenticadas (home, lugares, profile)
+      this.showBottomNav = (url === '/home' || url.startsWith('/home/') || url === '/lugares' || url.startsWith('/lugares/') || url === '/profile' || url.startsWith('/profile/')) && this.userService.isAuthenticated();
+      console.log(`📱 Navegación detectada: ${url} - Bottom Nav: ${this.showBottomNav} - Auth: ${this.userService.isAuthenticated()}`);
     });
+    
+    // Log del estado inicial
+    setTimeout(() => {
+      console.log('📍 URL inicial:', this.router.url);
+      console.log('🔧 Router configurado:', this.router.config.length, 'rutas');
+      console.log('🔐 Usuario autenticado:', this.userService.isAuthenticated());
+    }, 100);
   }
 
-  navigateHome(event?: Event) {
-    // Prevenir comportamiento por defecto y propagación
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  /**
+   * Navegación a Home - Flujo de autenticación considerado
+   */
+  async navigateHome(event?: Event) {
+    console.log('🏠 ==> NAVEGANDO A HOME');
     
-    // Agregar feedback visual temporal
-    this.addClickFeedback(event?.target as HTMLElement);
-    
-    console.log('🏠 Navegando a Home...');
-    console.log('📍 URL actual:', this.router.url);
-    
-    // Usar navigateByUrl para forzar navegación
-    this.router.navigateByUrl('/home', { replaceUrl: false }).then((success) => {
+    try {
+      // Prevenir comportamiento por defecto
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      // Verificar autenticación
+      if (!this.userService.isAuthenticated()) {
+        console.log('❌ Usuario no autenticado, redirigiendo a login');
+        await this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Feedback visual
+      this.addClickFeedback(event?.target as HTMLElement);
+      
+      console.log('📍 URL actual:', this.router.url);
+      
+      // Navegación robusta
+      const success = await this.router.navigateByUrl('/home', { replaceUrl: false });
       if (success) {
         console.log('✅ Navegación a Home exitosa');
-        console.log('📍 Nueva URL:', this.router.url);
       } else {
-        console.error('❌ Fallo en la navegación a Home');
-        // Intentar con navigate como fallback
-        this.router.navigate(['/home']);
+        // Fallback
+        await this.router.navigate(['/home']);
+        console.log('✅ Navegación a Home exitosa (fallback)');
       }
-    }).catch(err => {
-      console.error('💥 Error navegando a Home:', err);
-      // Fallback directo
-      this.router.navigate(['/home']);
-    });
-  }
-  
-  navigateLugares(event?: Event) {
-    // Prevenir comportamiento por defecto y propagación
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
+      
+    } catch (error) {
+      console.error('💥 Error navegando a Home:', error);
+      // Último recurso
+      window.location.href = '/home';
     }
+  }
+
+  /**
+   * Navegación a Lugares - Flujo de autenticación considerado
+   */
+  async navigateLugares(event?: Event) {
+    console.log('🔍 ==> NAVEGANDO A LUGARES');
     
-    // Agregar feedback visual temporal
-    this.addClickFeedback(event?.target as HTMLElement);
-    
-    console.log('🔍 Navegando a Lugares...');
-    console.log('📍 URL actual:', this.router.url);
-    
-    // Usar navigateByUrl para forzar navegación
-    this.router.navigateByUrl('/lugares', { replaceUrl: false }).then((success) => {
+    try {
+      // Prevenir comportamiento por defecto
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      // Verificar autenticación
+      if (!this.userService.isAuthenticated()) {
+        console.log('❌ Usuario no autenticado, redirigiendo a login');
+        await this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Feedback visual
+      this.addClickFeedback(event?.target as HTMLElement);
+      
+      console.log('📍 URL actual:', this.router.url);
+      
+      // Navegación robusta
+      const success = await this.router.navigateByUrl('/lugares', { replaceUrl: false });
       if (success) {
         console.log('✅ Navegación a Lugares exitosa');
-        console.log('📍 Nueva URL:', this.router.url);
       } else {
-        console.error('❌ Fallo en la navegación a Lugares');
-        // Intentar con navigate como fallback
-        this.router.navigate(['/lugares']);
+        // Fallback
+        await this.router.navigate(['/lugares']);
+        console.log('✅ Navegación a Lugares exitosa (fallback)');
       }
-    }).catch(err => {
-      console.error('💥 Error navegando a Lugares:', err);
-      // Fallback directo
-      this.router.navigate(['/lugares']);
-    });
+      
+    } catch (error) {
+      console.error('💥 Error navegando a Lugares:', error);
+      // Último recurso
+      window.location.href = '/lugares';
+    }
+  }
+
+  /**
+   * Navegación a Perfil - Ultra robusta con autenticación
+   */
+  async navigateProfile(event?: Event) {
+    console.log('👤 ==> NAVEGANDO A PERFIL');
+    
+    try {
+      // Prevenir comportamiento por defecto
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      // Verificar autenticación
+      if (!this.userService.isAuthenticated()) {
+        console.log('❌ Usuario no autenticado, redirigiendo a login');
+        await this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Feedback visual
+      this.addClickFeedback(event?.target as HTMLElement);
+      
+      console.log('📍 URL actual:', this.router.url);
+      
+      // Navegación robusta
+      const success = await this.router.navigateByUrl('/profile', { replaceUrl: false });
+      if (success) {
+        console.log('✅ Navegación a Perfil exitosa');
+      } else {
+        // Fallback
+        await this.router.navigate(['/profile']);
+        console.log('✅ Navegación a Perfil exitosa (fallback)');
+      }
+      
+    } catch (error) {
+      console.error('💥 Error navegando a Perfil:', error);
+      // Último recurso
+      window.location.href = '/profile';
+    }
   }
 
   /**
@@ -107,62 +183,6 @@ export class AppComponent {
       setTimeout(() => {
         button?.classList.remove('nav-button-clicked');
       }, 200);
-    }
-  }
-
-  async openCamera() {
-    if (this.capturing) return;
-    
-    try {
-      this.capturing = true;
-      const photo = await Camera.getPhoto({
-        resultType: CameraResultType.Base64,
-        source: CameraSource.Camera,
-        quality: 90,
-        saveToGallery: false,
-        correctOrientation: true,
-        webUseInput: false
-      });
-
-      if (!photo || !photo.base64String) return;
-
-      const imageUrl = `data:image/jpeg;base64,${photo.base64String}`;
-      const username = this.userService.getUsername() || 'Usuario';
-
-      // Crear nuevo lugar con la foto
-      const newPlace = {
-        id: Date.now().toString(),
-        place: 'Nueva foto',
-        imageUrl,
-        rating: 0,
-        location: '',
-        user: username,
-        likes: 0,
-        shares: 0,
-        likedByUser: false
-      };
-
-      // Añadir la foto al servicio de lugares
-      this.placesService.addPlace(newPlace);
-
-      // Mostrar confirmación
-      const alert = await this.alertCtrl.create({
-        header: '¡Foto capturada!',
-        message: 'Tu foto ha sido guardada exitosamente',
-        buttons: ['OK']
-      });
-      await alert.present();
-
-    } catch (err) {
-      console.error('Error al abrir cámara:', err);
-      const errorAlert = await this.alertCtrl.create({
-        header: 'Error',
-        message: 'No se pudo acceder a la cámara',
-        buttons: ['OK']
-      });
-      await errorAlert.present();
-    } finally {
-      this.capturing = false;
     }
   }
 }

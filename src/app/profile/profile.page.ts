@@ -292,8 +292,43 @@ export class ProfilePage implements OnInit {
     await alert.present();
   }
 
-  goBack() {
-    this.router.navigate(['/home']);
+  /**
+   * Navegación hacia atrás ULTRA-ROBUSTA
+   */
+  async goBack(event?: Event) {
+    console.log(' ==> NAVEGANDO DESDE PERFIL A HOME');
+    
+    try {
+      // Prevenir comportamiento por defecto
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      // Verificar autenticación
+      if (!this.userService.isAuthenticated()) {
+        console.log(' Usuario no autenticado, redirigiendo a login');
+        await this.router.navigate(['/login']);
+        return;
+      }
+      
+      console.log(' URL actual:', this.router.url);
+      
+      // Navegación robusta a Home
+      const success = await this.router.navigateByUrl('/home', { replaceUrl: false });
+      if (success) {
+        console.log('Navegación desde Perfil a Home exitosa');
+      } else {
+        // Fallback
+        await this.router.navigate(['/home']);
+        console.log('Navegación desde Perfil a Home exitosa (fallback)');
+      }
+      
+    } catch (error) {
+      console.error(' Error navegando desde Perfil a Home:', error);
+      // Último recurso
+      window.location.href = '/home';
+    }
   }
 
   private async showToast(message: string) {
@@ -305,6 +340,3 @@ export class ProfilePage implements OnInit {
     await toast.present();
   }
 }
-/ *   P r o f i l e   p a g e   u p d a t e d   * / 
- 
- 

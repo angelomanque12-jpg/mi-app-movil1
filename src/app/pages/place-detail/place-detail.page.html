@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/lugares"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ place?.place || 'Detalle' }}</ion-title>
   </ion-toolbar>
@@ -10,16 +10,20 @@
 <ion-content>
   <div class="detail-container" *ngIf="place">
     <div class="main-image">
-        <img [src]="place.imageUrl" [alt]="place.place" />
-      </div>
-      <div class="detail-body">
+      <img [src]="place.imageUrl" [alt]="place.place" />
+    </div>
+    
+    <div class="detail-body">
       <h2>{{ place.place }}</h2>
       <div class="meta">{{ place.location }} • {{ place.rating }} ★</div>
 
       <h3>Galería</h3>
-      <div class="gallery">
+      <div class="gallery" *ngIf="place.gallery && place.gallery.length > 0; else noGallery">
         <img class="thumb" *ngFor="let g of place.gallery" [src]="g" (click)="openImage(g)" />
       </div>
+      <ng-template #noGallery>
+        <p>No hay imágenes adicionales disponibles.</p>
+      </ng-template>
 
       <h3>Comentarios</h3>
       <div *ngIf="place.comments?.length; else noComments">
@@ -43,22 +47,18 @@
       <ion-button expand="block" (click)="submitFeedback()">Enviar</ion-button>
     </div>
   </div>
-    <div class="overlay" *ngIf="showModal" (click)="closeModal()">
-      <div class="overlay-inner">
-        <img [src]="selectedImage" />
-      </div>
-    </div>
-</ion-content>
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>place-detail</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">place-detail</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Overlay para imagen completa -->
+  <div class="overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="overlay-inner">
+      <img [src]="selectedImage" />
+    </div>
+  </div>
+
+  <!-- Mensaje si no se encuentra el lugar -->
+  <div class="not-found" *ngIf="!place">
+    <h2>Lugar no encontrado</h2>
+    <p>Lo sentimos, no pudimos encontrar la información de este lugar.</p>
+    <ion-button routerLink="/lugares">Volver a lugares</ion-button>
+  </div>
 </ion-content>

@@ -1,23 +1,47 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
 
-  <!-- Navegación inferior -->
+  <!-- Navegación inferior ULTRA ROBUSTA -->
   <ion-footer *ngIf="showBottomNav" class="bottom-nav">
     <div class="bottom-navigation">
-      <div class="nav-button" (click)="navigateHome($event)">
-        <ion-icon name="home-outline"></ion-icon>
+      <button 
+        class="nav-button" 
+        type="button"
+        tabindex="0"
+        role="button"
+        aria-label="Ir a Inicio"
+        (click)="navigateHome($event)"
+        (keydown.enter)="navigateHome($event)"
+        (keydown.space)="navigateHome($event)">
+        <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
         <span>Inicio</span>
-      </div>
+      </button>
       
-      <div class="nav-button camera-button" (click)="openCamera()">
-        <ion-icon name="camera"></ion-icon>
-        <span>Cámara</span>
-      </div>
-      
-      <div class="nav-button" (click)="navigateLugares($event)">
-        <ion-icon name="search-outline"></ion-icon>
+      <button 
+        class="nav-button" 
+        type="button"
+        tabindex="0"
+        role="button"
+        aria-label="Buscar Lugares"
+        (click)="navigateLugares($event)"
+        (keydown.enter)="navigateLugares($event)"
+        (keydown.space)="navigateLugares($event)">
+        <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
         <span>Buscar</span>
-      </div>
+      </button>
+      
+      <button 
+        class="nav-button" 
+        type="button"
+        tabindex="0"
+        role="button"
+        aria-label="Mi Perfil"
+        (click)="navigateProfile($event)"
+        (keydown.enter)="navigateProfile($event)"
+        (keydown.space)="navigateProfile($event)">
+        <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+        <span>Perfil</span>
+      </button>
     </div>
   </ion-footer>
 </ion-app>
