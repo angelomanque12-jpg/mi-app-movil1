@@ -51,6 +51,12 @@ export class LugaresPage {
   onSearchInput() {
     const searchTerm = this.search.toLowerCase().trim();
     
+    // Limpiar selección de país si hay búsqueda activa
+    if (searchTerm && this.selectedCountry) {
+      this.selectedCountry = null;
+      this.placesService.filterByCountry(null);
+    }
+    
     // Filtrar países
     this.filteredCountries = this.countries.filter(country =>
       country.name.toLowerCase().includes(searchTerm)
@@ -60,32 +66,66 @@ export class LugaresPage {
     if (searchTerm) {
       this.places = this.allPlaces.filter(place =>
         place.place.toLowerCase().includes(searchTerm) ||
-        place.location.toLowerCase().includes(searchTerm)
+        place.location.toLowerCase().includes(searchTerm) ||
+        (place.country && place.country.toLowerCase().includes(searchTerm)) ||
+        (place.tags && place.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
       );
     } else {
       // Si no hay término de búsqueda, mostrar lugares recomendados
       this.places = this.recommendedPlaces;
+      this.filteredCountries = this.countries;
     }
   }
 
-  // Lista de países con sus banderas
+  // Lista de países con sus banderas (actualizada para coincidir con los datos reales)
   countries: CountryItem[] = [
     { code: 'cl', name: 'Chile', flagUrl: 'https://flagcdn.com/w80/cl.png' },
+    { code: 'pe', name: 'Peru', flagUrl: 'https://flagcdn.com/w80/pe.png' },
+    { code: 'bo', name: 'Bolivia', flagUrl: 'https://flagcdn.com/w80/bo.png' },
     { code: 'ar', name: 'Argentina', flagUrl: 'https://flagcdn.com/w80/ar.png' },
-    { code: 'br', name: 'Brasil', flagUrl: 'https://flagcdn.com/w80/br.png' },
-    { code: 'pe', name: 'Perú', flagUrl: 'https://flagcdn.com/w80/pe.png' },
-    { code: 'co', name: 'Colombia', flagUrl: 'https://flagcdn.com/w80/co.png' },
     { code: 'ec', name: 'Ecuador', flagUrl: 'https://flagcdn.com/w80/ec.png' },
-    { code: 'uy', name: 'Uruguay', flagUrl: 'https://flagcdn.com/w80/uy.png' },
-    { code: 'bo', name: 'Bolivia', flagUrl: 'https://flagcdn.com/w80/bo.png' }
+    { code: 've', name: 'Venezuela', flagUrl: 'https://flagcdn.com/w80/ve.png' },
+    { code: 'br', name: 'Brazil', flagUrl: 'https://flagcdn.com/w80/br.png' },
+    { code: 'nz', name: 'New Zealand', flagUrl: 'https://flagcdn.com/w80/nz.png' },
+    { code: 'fr', name: 'France', flagUrl: 'https://flagcdn.com/w80/fr.png' },
+    { code: 'ca', name: 'Canada', flagUrl: 'https://flagcdn.com/w80/ca.png' },
+    { code: 'gr', name: 'Greece', flagUrl: 'https://flagcdn.com/w80/gr.png' },
+    { code: 'us', name: 'USA', flagUrl: 'https://flagcdn.com/w80/us.png' }
   ];
 
   goHome() { 
-    this.router.navigateByUrl('/home'); 
+    console.log('Navegando a Home desde Lugares...');
+    console.log('URL actual:', this.router.url);
+    
+    // Limpiar estado antes de navegar
+    this.clearSearch();
+    this.clearCountrySelection();
+    
+    // Forzar navegación limpia a home
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/home']).then((success) => {
+        if (success) {
+          console.log('Navegación a Home desde Lugares exitosa');
+          console.log('Nueva URL:', this.router.url);
+        } else {
+          console.error('Fallo en la navegación a Home desde Lugares');
+        }
+      }).catch(err => {
+        console.error('Error en navigate a Home desde Lugares:', err);
+      });
+    }).catch(err => {
+      console.error('Error en navigateByUrl desde Lugares:', err);
+    });
   }
 
   // Función para seleccionar un país
   showCountry(country: CountryItem) {
+    // Limpiar búsqueda si hay una activa
+    if (this.search.trim()) {
+      this.search = '';
+      this.filteredCountries = this.countries;
+    }
+    
     if (this.selectedCountry === country.name) {
       // Si se selecciona el mismo país, deseleccionarlo
       this.selectedCountry = null;
@@ -104,6 +144,10 @@ export class LugaresPage {
             message: 'No hay lugares registrados para este país todavía.',
             buttons: ['OK']
           }).then(alert => alert.present());
+          
+          // Volver a mostrar lugares recomendados si no hay resultados
+          this.selectedCountry = null;
+          this.places = this.recommendedPlaces;
         }
       });
     }
@@ -118,5 +162,16 @@ export class LugaresPage {
   clearCountrySelection() {
     this.selectedCountry = null;
     this.filteredPlaces = [];
+    this.places = this.recommendedPlaces;
+    this.placesService.filterByCountry(null);
+  }
+
+  // Función para limpiar la búsqueda
+  clearSearch() {
+    this.search = '';
+    this.filteredCountries = this.countries;
+    if (!this.selectedCountry) {
+      this.places = this.recommendedPlaces;
+    }
   }
 }
