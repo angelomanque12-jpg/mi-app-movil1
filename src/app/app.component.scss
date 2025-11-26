@@ -1,32 +1,75 @@
-/* Bottom navigation (simple Instagram-like) */
+/* Navegación inferior estilo Instagram */
 .bottom-nav {
- 	--background: rgba(255,255,255,0.92);
- 	position: fixed;
- 	left: 0;
- 	right: 0;
- 	bottom: 18px; /* lifted more so it feels floating */
- 	z-index: 1000;
- 	/* make it visually lighter */
- 	border-top: 0;
- 	margin-left: 10px;
- 	margin-right: 10px;
- 	border-radius: 16px; /* floating pill style */
- 	backdrop-filter: blur(6px);
- 	box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-.bottom-toolbar { display:flex; justify-content:center; align-items:center; height:48px; }
-.nav-inner { display:flex; gap:12px; align-items:center; }
-.nav-btn { --padding-start: 6px; --padding-end:6px; color: #444; font-size: 0.92rem }
-.nav-btn ion-icon { font-size: 20px; }
-.nav-btn.active { color: #111; }
 
-/* ensure page content doesn't hide under the footer */
+.bottom-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  height: 60px;
+}
 
-/* Make footer non-blocking for pointer events except buttons inside it */
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 5px;
+  min-width: 60px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
 
-/* reduce global bottom padding so footer feels lighter but doesn't cover captions */
-ion-content { padding-bottom: 72px; }
+.nav-button:hover {
+  transform: scale(1.1);
+}
 
-/* If specific pages need extra spacing, you can add page-specific rules, e.g.: */
-.lugares-page ion-content { padding-bottom: 120px; }
+.nav-button:active {
+  transform: scale(0.95);
+}
+
+.nav-button ion-icon {
+  font-size: 24px;
+  color: #666;
+  margin-bottom: 2px;
+  pointer-events: none;
+}
+
+.nav-button span {
+  font-size: 10px;
+  color: #666;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.camera-button ion-icon {
+  font-size: 28px;
+  color: #007bff;
+}
+
+.camera-button span {
+  color: #007bff;
+}
+
+/* Asegurar que el contenido no se oculte bajo la navegación */
+ion-content {
+  padding-bottom: 70px;
+}
+
+/* Espaciado extra para páginas específicas si es necesario */
+.lugares-page ion-content {
+  padding-bottom: 80px;
+}
 

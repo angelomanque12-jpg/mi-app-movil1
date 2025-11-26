@@ -1,22 +1,23 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
 
-  <!-- Bottom navigation similar to Instagram: Home and Search -->
-  <ion-footer *ngIf="showBottomNav" class="bottom-nav" translucent>
-    <ion-toolbar class="bottom-toolbar">
-      <ion-buttons slot="start"></ion-buttons>
-      <div class="nav-inner">
-        <ion-button class="nav-btn" routerLink="/home" (click)="navigateHome()" fill="clear">
-          <ion-icon slot="icon-only" name="home"></ion-icon>
-        </ion-button>
-        <ion-button class="nav-btn camera-btn" (click)="openCamera()" fill="clear">
-          <ion-icon slot="icon-only" name="camera"></ion-icon>
-        </ion-button>
-        <ion-button class="nav-btn" routerLink="/lugares" (click)="navigateLugares()" fill="clear">
-          <ion-icon slot="icon-only" name="search"></ion-icon>
-        </ion-button>
+  <!-- Navegación inferior -->
+  <ion-footer *ngIf="showBottomNav" class="bottom-nav">
+    <div class="bottom-navigation">
+      <div class="nav-button" (click)="navigateHome($event)">
+        <ion-icon name="home-outline"></ion-icon>
+        <span>Inicio</span>
       </div>
-      <ion-buttons slot="end"></ion-buttons>
-    </ion-toolbar>
+      
+      <div class="nav-button camera-button" (click)="openCamera()">
+        <ion-icon name="camera"></ion-icon>
+        <span>Cámara</span>
+      </div>
+      
+      <div class="nav-button" (click)="navigateLugares($event)">
+        <ion-icon name="search-outline"></ion-icon>
+        <span>Buscar</span>
+      </div>
+    </div>
   </ion-footer>
 </ion-app>

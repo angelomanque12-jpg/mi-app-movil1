@@ -22,17 +22,57 @@ export class AppComponent {
   private alertCtrl = inject(AlertController);
 
   constructor(private router: Router) {
-    // Mostrar barra de navegación inferior solo en /home
+    // Mostrar barra de navegación inferior en home y lugares
     router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
       const url = e.urlAfterRedirects || e.url;
-      this.showBottomNav = url === '/home' || url.startsWith('/home/');
+      this.showBottomNav = url === '/home' || url.startsWith('/home/') || url === '/lugares' || url.startsWith('/lugares/');
     });
   }
-  navigateHome() {
-    this.router.navigateByUrl('/home');
+
+  navigateHome(event?: Event) {
+    // Prevenir comportamiento por defecto
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    console.log('Navegando a Home desde barra inferior...');
+    console.log('URL actual:', this.router.url);
+    
+    // Navegación directa y simple
+    this.router.navigate(['/home']).then((success) => {
+      if (success) {
+        console.log('Navegación a Home desde barra inferior exitosa');
+        console.log('Nueva URL:', this.router.url);
+      } else {
+        console.error('Fallo en la navegación a Home desde barra inferior');
+      }
+    }).catch(err => {
+      console.error('Error navegando a Home desde barra inferior:', err);
+    });
   }
-  navigateLugares() {
-    this.router.navigateByUrl('/lugares');
+  
+  navigateLugares(event?: Event) {
+    // Prevenir comportamiento por defecto
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    console.log('Navegando a Lugares desde barra inferior...');
+    console.log('URL actual:', this.router.url);
+    
+    // Navegación directa y simple
+    this.router.navigate(['/lugares']).then((success) => {
+      if (success) {
+        console.log('Navegación a Lugares desde barra inferior exitosa');
+        console.log('Nueva URL:', this.router.url);
+      } else {
+        console.error('Fallo en la navegación a Lugares desde barra inferior');
+      }
+    }).catch(err => {
+      console.error('Error navegando a Lugares desde barra inferior:', err);
+    });
   }
 
   async openCamera() {
@@ -46,7 +86,7 @@ export class AppComponent {
         quality: 90,
         saveToGallery: false,
         correctOrientation: true,
-        webUseInput: false // Esto fuerza el uso de la cámara web en lugar del selector de archivos
+        webUseInput: false
       });
 
       if (!photo || !photo.base64String) return;
@@ -70,61 +110,11 @@ export class AppComponent {
       // Añadir la foto al servicio de lugares
       this.placesService.addPlace(newPlace);
 
-      // Preguntar al usuario si desea guardar en álbum
+      // Mostrar confirmación
       const alert = await this.alertCtrl.create({
-        header: '¿Guardar foto en álbum?',
-        message: 'Puedes guardar esta foto en uno de tus álbumes',
-        buttons: [
-          {
-            text: 'No guardar',
-            role: 'cancel'
-          },
-          {
-            text: 'Guardar',
-            handler: async () => {
-              const boards = this.boardsService.getBoards();
-              if (!boards || !boards.length) {
-                const name = prompt('Nombre del nuevo álbum');
-                if (name && name.trim()) {
-                  const board = this.boardsService.createBoard(name.trim());
-                  this.boardsService.addPin(board.id, newPlace.id);
-                  const t = await this.alertCtrl.create({ message: 'Guardado en ' + board.name, buttons: ['OK'] });
-                  await t.present();
-                }
-                return;
-              }
-
-              const boardAlert = await this.alertCtrl.create({
-                header: 'Seleccionar álbum',
-                inputs: boards.map(b => ({
-                  type: 'radio' as const,
-                  label: b.name,
-                  value: b.id
-                })),
-                buttons: [
-                  {
-                    text: 'Cancelar',
-                    role: 'cancel'
-                  },
-                  {
-                    text: 'Guardar',
-                    handler: async (boardId) => {
-                      if (boardId) {
-                        this.boardsService.addPin(boardId, newPlace.id);
-                        const t = await this.alertCtrl.create({ 
-                          message: 'Foto guardada en el álbum', 
-                          buttons: ['OK'] 
-                        });
-                        await t.present();
-                      }
-                    }
-                  }
-                ]
-              });
-              await boardAlert.present();
-            }
-          }
-        ]
+        header: '¡Foto capturada!',
+        message: 'Tu foto ha sido guardada exitosamente',
+        buttons: ['OK']
       });
       await alert.present();
 
