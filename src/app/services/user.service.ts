@@ -50,6 +50,68 @@ export class UserService {
   }
 
   /**
+   * Obtiene información adicional del usuario actual
+   * @returns objeto con datos del usuario
+   */
+  getCurrentUser() {
+    return this.currentUser;
+  }
+
+  /**
+   * Obtiene el nombre de display del usuario
+   * @returns el nombre de display guardado o cadena vacía
+   */
+  getDisplayName(): string {
+    return localStorage.getItem('displayName') || '';
+  }
+
+  /**
+   * Guarda el nombre de display del usuario
+   * @param name nombre de display a guardar
+   */
+  setDisplayName(name: string) {
+    localStorage.setItem('displayName', name);
+  }
+
+  /**
+   * Obtiene la fecha de registro del usuario
+   * @returns fecha de registro formateada
+   */
+  getMemberSince(): string {
+    const memberDate = localStorage.getItem('memberSince');
+    if (memberDate) {
+      return new Date(memberDate).toLocaleDateString('es-ES');
+    } else {
+      const now = new Date().toISOString();
+      localStorage.setItem('memberSince', now);
+      return new Date(now).toLocaleDateString('es-ES');
+    }
+  }
+
+  /**
+   * Actualiza las estadísticas del usuario
+   * @param type tipo de estadística (favorite, share, view)
+   * @param increment incremento (por defecto 1)
+   */
+  updateUserStats(type: 'favorite' | 'share' | 'view', increment: number = 1) {
+    const key = `${type}Count`;
+    const current = parseInt(localStorage.getItem(key) || '0');
+    localStorage.setItem(key, (current + increment).toString());
+  }
+
+  /**
+   * Obtiene las estadísticas del usuario
+   * @returns objeto con las estadísticas del usuario
+   */
+  getUserStats() {
+    return {
+      favoriteCount: parseInt(localStorage.getItem('favoriteCount') || '0'),
+      shareCount: parseInt(localStorage.getItem('shareCount') || '0'),
+      viewCount: parseInt(localStorage.getItem('viewCount') || '0')
+    };
+  }
+
+  /**
    * Intenta iniciar sesión con las credenciales proporcionadas
    * @param email Correo electrónico del usuario
    * @param password Contraseña del usuario

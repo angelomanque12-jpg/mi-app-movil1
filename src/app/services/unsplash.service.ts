@@ -298,69 +298,73 @@ export class UnsplashService {
   private getMockLandscapes(): Observable<ProcessedLandscape[]> {
     // URLs reales de Unsplash para cada ubicación
     const realImageUrls = [
-      // Torres del Paine
-      'https://images.unsplash.com/photo-1548109958-73fb1d3ae87a?w=800&h=600&fit=crop&auto=format',
-      // Machu Picchu
-      'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&h=600&fit=crop&auto=format',
-      // Salar de Uyuni
-      'https://images.unsplash.com/photo-1544967919-245d3ae5b1b1?w=800&h=600&fit=crop&auto=format',
-      // Cataratas del Iguazú
-      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format',
-      // Desierto de Atacama
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format',
-      // Valle de la Luna
-      'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&h=600&fit=crop&auto=format',
-      // Geysers del Tatio
-      'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&h=600&fit=crop&auto=format',
-      // Laguna Colorada
-      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format',
-      // Glaciar Perito Moreno
-      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=800&h=600&fit=crop&auto=format',
-      // Caño Cristales
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format',
-      // Valle del Cocora
-      'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format',
-      // Islas Galápagos
-      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=800&h=600&fit=crop&auto=format',
-      // Lençóis Maranhenses
-      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format',
-      // Pantanal
-      'https://images.unsplash.com/photo-1574263867128-3cfb3d71b55a?w=800&h=600&fit=crop&auto=format',
-      // Roraima
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format'
+      // Torres del Paine - Chile (URL confiable - paisaje de montañas)
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80',
+      // Machu Picchu - Peru
+      'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&h=600&fit=crop&auto=format&q=80',
+      // Salar de Uyuni - Bolivia (URL mejorada)
+      'https://images.unsplash.com/photo-1625662555790-d94c87635bf3?w=800&h=600&fit=crop&auto=format&q=80',
+      // Cataratas del Iguazú - Argentina
+      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80',
+      // Desierto de Atacama - Chile
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80',
+      // Valle de la Luna - Chile  
+      'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=800&h=600&fit=crop&auto=format&q=80',
+      // Geysers del Tatio - Chile
+      'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&h=600&fit=crop&auto=format&q=80',
+      // Laguna Colorada - Bolivia
+      'https://images.unsplash.com/photo-1587837073080-448bc6a2329b?w=800&h=600&fit=crop&auto=format&q=80',
+      // Glaciar Perito Moreno - Argentina
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=800&h=600&fit=crop&auto=format&q=80',
+      // Caño Cristales - Colombia
+      'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80',
+      // Valle del Cocora - Colombia
+      'https://images.unsplash.com/photo-1574263867128-3cfb3d71b55a?w=800&h=600&fit=crop&auto=format&q=80',
+      // Fernando de Noronha - Brasil (URL mejorada)
+      'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=800&h=600&fit=crop&auto=format&q=80',
+      // Lençóis Maranhenses - Brasil
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80',
+      // Milford Sound - Nueva Zelanda (URL mejorada)
+      'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800&h=600&fit=crop&auto=format&q=80',
+      // Mont Blanc - Francia/Italia (URL mejorada)
+      'https://images.unsplash.com/photo-1464822759844-d150ad6bf55c?w=800&h=600&fit=crop&auto=format&q=80',
+      // Santorini - Grecia (URL mejorada)
+      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&h=600&fit=crop&auto=format&q=80'
     ];
 
     const realThumbnailUrls = [
-      // Torres del Paine
-      'https://images.unsplash.com/photo-1548109958-73fb1d3ae87a?w=300&h=200&fit=crop&auto=format',
-      // Machu Picchu
-      'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=300&h=200&fit=crop&auto=format',
-      // Salar de Uyuni
-      'https://images.unsplash.com/photo-1544967919-245d3ae5b1b1?w=300&h=200&fit=crop&auto=format',
-      // Cataratas del Iguazú
-      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop&auto=format',
-      // Desierto de Atacama
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format',
-      // Valle de la Luna
-      'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=300&h=200&fit=crop&auto=format',
-      // Geysers del Tatio
-      'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=300&h=200&fit=crop&auto=format',
-      // Laguna Colorada
-      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&auto=format',
-      // Glaciar Perito Moreno
-      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=300&h=200&fit=crop&auto=format',
-      // Caño Cristales
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format',
-      // Valle del Cocora
-      'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=300&h=200&fit=crop&auto=format',
-      // Islas Galápagos
-      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=300&h=200&fit=crop&auto=format',
-      // Lençóis Maranhenses
-      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&auto=format',
-      // Pantanal
-      'https://images.unsplash.com/photo-1574263867128-3cfb3d71b55a?w=300&h=200&fit=crop&auto=format',
-      // Roraima
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format'
+      // Torres del Paine - Chile (URL confiable - paisaje de montañas)
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80',
+      // Machu Picchu - Peru
+      'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=300&h=200&fit=crop&auto=format&q=80',
+      // Salar de Uyuni - Bolivia (URL mejorada)
+      'https://images.unsplash.com/photo-1625662555790-d94c87635bf3?w=300&h=200&fit=crop&auto=format&q=80',
+      // Cataratas del Iguazú - Argentina
+      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop&auto=format&q=80',
+      // Desierto de Atacama - Chile
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80',
+      // Valle de la Luna - Chile
+      'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=300&h=200&fit=crop&auto=format&q=80',
+      // Geysers del Tatio - Chile
+      'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=300&h=200&fit=crop&auto=format&q=80',
+      // Laguna Colorada - Bolivia
+      'https://images.unsplash.com/photo-1587837073080-448bc6a2329b?w=300&h=200&fit=crop&auto=format&q=80',
+      // Glaciar Perito Moreno - Argentina
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=300&h=200&fit=crop&auto=format&q=80',
+      // Caño Cristales - Colombia
+      'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=300&h=200&fit=crop&auto=format&q=80',
+      // Valle del Cocora - Colombia
+      'https://images.unsplash.com/photo-1574263867128-3cfb3d71b55a?w=300&h=200&fit=crop&auto=format&q=80',
+      // Fernando de Noronha - Brasil (URL mejorada)
+      'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=300&h=200&fit=crop&auto=format&q=80',
+      // Lençóis Maranhenses - Brasil
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&auto=format&q=80',
+      // Milford Sound - Nueva Zelanda (URL mejorada)
+      'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=300&h=200&fit=crop&auto=format&q=80',
+      // Mont Blanc - Francia/Italia (URL mejorada)
+      'https://images.unsplash.com/photo-1464822759844-d150ad6bf55c?w=300&h=200&fit=crop&auto=format&q=80',
+      // Santorini - Grecia (URL mejorada)
+      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=300&h=200&fit=crop&auto=format&q=80'
     ];
 
     const mockLandscapes: ProcessedLandscape[] = this.FAMOUS_LOCATIONS.map((location, index) => ({

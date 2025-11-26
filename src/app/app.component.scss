@@ -4,10 +4,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  z-index: 9999; /* Aumentar z-index */
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(15px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .bottom-navigation {
@@ -16,6 +17,8 @@
   align-items: center;
   padding: 10px 0;
   height: 60px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .nav-button {
@@ -25,19 +28,46 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding: 5px;
-  min-width: 60px;
+  padding: 8px;
+  min-width: 70px;
+  min-height: 50px;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   position: relative;
+  z-index: 10000;
+  /* Asegurar que sea clickeable */
+  pointer-events: auto;
+  touch-action: manipulation;
+  
+  /* Área de click más grande */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    z-index: -1;
+  }
 }
 
 .nav-button:hover {
   transform: scale(1.1);
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 12px;
 }
 
 .nav-button:active {
   transform: scale(0.95);
+  background: rgba(0, 123, 255, 0.2);
+  border-radius: 12px;
+}
+
+/* Clase para feedback de click */
+.nav-button-clicked {
+  transform: scale(0.9) !important;
+  background: rgba(0, 123, 255, 0.3) !important;
+  border-radius: 12px !important;
 }
 
 .nav-button ion-icon {
@@ -45,6 +75,7 @@
   color: #666;
   margin-bottom: 2px;
   pointer-events: none;
+  transition: color 0.2s ease;
 }
 
 .nav-button span {
@@ -52,6 +83,12 @@
   color: #666;
   font-weight: 500;
   pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.nav-button:hover ion-icon,
+.nav-button:hover span {
+  color: #007bff;
 }
 
 .camera-button ion-icon {

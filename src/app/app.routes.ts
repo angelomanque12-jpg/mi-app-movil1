@@ -20,6 +20,11 @@ export const routes: Routes = [
     path: 'lugares',
     loadComponent: () => import('./lugares/lugares.page').then(m => m.LugaresPage),
     canActivate: [authGuard]
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
+    canActivate: [authGuard]
   }
-];
+
 ];

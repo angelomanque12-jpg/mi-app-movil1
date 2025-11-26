@@ -30,49 +30,84 @@ export class AppComponent {
   }
 
   navigateHome(event?: Event) {
-    // Prevenir comportamiento por defecto
+    // Prevenir comportamiento por defecto y propagación
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
     
-    console.log('Navegando a Home desde barra inferior...');
-    console.log('URL actual:', this.router.url);
+    // Agregar feedback visual temporal
+    this.addClickFeedback(event?.target as HTMLElement);
     
-    // Navegación directa y simple
-    this.router.navigate(['/home']).then((success) => {
+    console.log('🏠 Navegando a Home...');
+    console.log('📍 URL actual:', this.router.url);
+    
+    // Usar navigateByUrl para forzar navegación
+    this.router.navigateByUrl('/home', { replaceUrl: false }).then((success) => {
       if (success) {
-        console.log('Navegación a Home desde barra inferior exitosa');
-        console.log('Nueva URL:', this.router.url);
+        console.log('✅ Navegación a Home exitosa');
+        console.log('📍 Nueva URL:', this.router.url);
       } else {
-        console.error('Fallo en la navegación a Home desde barra inferior');
+        console.error('❌ Fallo en la navegación a Home');
+        // Intentar con navigate como fallback
+        this.router.navigate(['/home']);
       }
     }).catch(err => {
-      console.error('Error navegando a Home desde barra inferior:', err);
+      console.error('💥 Error navegando a Home:', err);
+      // Fallback directo
+      this.router.navigate(['/home']);
     });
   }
   
   navigateLugares(event?: Event) {
-    // Prevenir comportamiento por defecto
+    // Prevenir comportamiento por defecto y propagación
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
     
-    console.log('Navegando a Lugares desde barra inferior...');
-    console.log('URL actual:', this.router.url);
+    // Agregar feedback visual temporal
+    this.addClickFeedback(event?.target as HTMLElement);
     
-    // Navegación directa y simple
-    this.router.navigate(['/lugares']).then((success) => {
+    console.log('🔍 Navegando a Lugares...');
+    console.log('📍 URL actual:', this.router.url);
+    
+    // Usar navigateByUrl para forzar navegación
+    this.router.navigateByUrl('/lugares', { replaceUrl: false }).then((success) => {
       if (success) {
-        console.log('Navegación a Lugares desde barra inferior exitosa');
-        console.log('Nueva URL:', this.router.url);
+        console.log('✅ Navegación a Lugares exitosa');
+        console.log('📍 Nueva URL:', this.router.url);
       } else {
-        console.error('Fallo en la navegación a Lugares desde barra inferior');
+        console.error('❌ Fallo en la navegación a Lugares');
+        // Intentar con navigate como fallback
+        this.router.navigate(['/lugares']);
       }
     }).catch(err => {
-      console.error('Error navegando a Lugares desde barra inferior:', err);
+      console.error('💥 Error navegando a Lugares:', err);
+      // Fallback directo
+      this.router.navigate(['/lugares']);
     });
+  }
+
+  /**
+   * Añade feedback visual cuando se hace click en un botón
+   */
+  private addClickFeedback(target: HTMLElement | null) {
+    if (!target) return;
+    
+    // Encontrar el botón padre si el target es un icono o texto
+    let button = target.closest('.nav-button') as HTMLElement;
+    if (!button) button = target;
+    
+    // Agregar clase de feedback
+    if (button) {
+      button.classList.add('nav-button-clicked');
+      
+      // Remover la clase después de la animación
+      setTimeout(() => {
+        button?.classList.remove('nav-button-clicked');
+      }, 200);
+    }
   }
 
   async openCamera() {

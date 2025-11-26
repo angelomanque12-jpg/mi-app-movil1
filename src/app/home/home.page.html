@@ -12,9 +12,6 @@
       <ion-button (click)="goToPerfil()" title="Perfil">
         <ion-icon name="person-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="goToConfig()" title="Configuración">
-        <ion-icon name="settings-outline"></ion-icon>
-      </ion-button>
       <ion-button (click)="confirmLogout()" title="Cerrar sesión">
         <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
@@ -63,8 +60,27 @@
     <ng-container *ngFor="let p of (filteredPlaces.length ? filteredPlaces : places); trackBy: trackByPlace">
       <article class="place-card" (click)="onPhotoClick(p)" [@cardAnimation]>
         <div class="image-wrap">
-    <img loading="lazy" [src]="safeImage(p.imageUrl)" [alt]="p.place"
-      (load)="onImageLoad(p.imageUrl)" (error)="onImageError(p.imageUrl)" />
+          <!-- Spinner de carga - se muestra hasta que la imagen cargue o falle -->
+          <div class="image-loader" *ngIf="!isImageLoaded(p.imageUrl) && !hasImageFailed(p.imageUrl)">
+            <ion-spinner name="circular"></ion-spinner>
+          </div>
+          
+          <!-- Imagen principal -->
+          <img 
+            loading="lazy" 
+            [src]="safeImage(p.imageUrl)" 
+            [alt]="p.place"
+            [style.opacity]="isImageLoaded(p.imageUrl) ? '1' : (hasImageFailed(p.imageUrl) ? '0.7' : '0')"
+            [style.transition]="'opacity 0.3s ease'"
+            (load)="onImageLoad(p.imageUrl)" 
+            (error)="onImageError(p.imageUrl)"
+            class="place-image" />
+          
+          <!-- Overlay con indicador de error si la imagen falla -->
+          <div class="error-overlay" *ngIf="hasImageFailed(p.imageUrl)">
+            <ion-icon name="image-outline" color="medium"></ion-icon>
+            <span>Imagen no disponible</span>
+          </div>
           <div class="card-actions">
             <ion-button class="micro-btn" fill="clear" color="danger" (click)="$event.stopPropagation(); toggleLike(p)">
               <ion-icon [name]="p.likedByUser ? 'heart' : 'heart-outline'"></ion-icon>
