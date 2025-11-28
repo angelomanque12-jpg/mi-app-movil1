@@ -15,17 +15,9 @@ import {
   createUserWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
+import { environment } from '../../environments/environment';
 
-// Configuración de Firebase proporcionada por la consola de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyC_E0pPszY_qJ_WwJBFoA7fsIgMqqhTFww",
-  authDomain: "app-movil-83e85.firebaseapp.com",
-  projectId: "app-movil-83e85",
-  storageBucket: "app-movil-83e85.firebasestorage.app",
-  messagingSenderId: "236014336560",
-  appId: "1:236014336560:web:7de5d97987e28f17770bf5",
-  measurementId: "G-XH1RLGTMFR"
-};
+// Configuración de Firebase cargada desde environment
 
 // Indica que este servicio es inyectable a nivel raíz de la aplicación
 @Injectable({
@@ -36,8 +28,8 @@ export class FirebaseAuthService {
   private auth;
 
   constructor() {
-    // Inicializar Firebase con la configuración proporcionada
-    const app = initializeApp(firebaseConfig);
+    // Inicializar Firebase con la configuración desde environment
+    const app = initializeApp(environment.firebase);
     this.auth = getAuth(app);
   }
 

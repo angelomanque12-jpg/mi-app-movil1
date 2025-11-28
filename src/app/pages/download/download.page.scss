@@ -1,0 +1,252 @@
+ion-header {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  ion-toolbar {
+    --background: transparent;
+    --border-color: transparent;
+    
+    ion-title {
+      color: white;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+ion-content {
+  --background: #f5f5f5;
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+}
+
+.download-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ============ VISTA DESKTOP ============ */
+.desktop-view {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.qr-container h1 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.qr-container p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.qr-box {
+  background: #f9f9f9;
+  border: 2px dashed #667eea;
+  border-radius: 15px;
+  padding: 30px;
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  qr-code {
+    display: block;
+  }
+}
+
+.instructions {
+  text-align: left;
+  background: #f0f4ff;
+  border-left: 4px solid #667eea;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+}
+
+.instructions h3 {
+  color: #667eea;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.instructions ol {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-left: 20px;
+}
+
+.instructions li {
+  margin-bottom: 10px;
+}
+
+/* ============ VISTA MÓVIL ============ */
+.mobile-view {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 20px;
+  padding: 30px 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.app-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.mobile-view h1 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.mobile-view p {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.download-btn {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --background-hover: linear-gradient(135deg, #5568d3 0%, #6a4394 100%);
+  --border-radius: 12px;
+  --box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 15px;
+  
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.open-btn {
+  --border-radius: 12px;
+  --border-color: #667eea;
+  --color: #667eea;
+  --border-width: 2px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.requirements {
+  background: #f0f4ff;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: left;
+}
+
+.requirements h3 {
+  color: #667eea;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.requirements ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.requirements li {
+  margin-bottom: 8px;
+  padding-left: 25px;
+  position: relative;
+}
+
+.requirements li:before {
+  content: "✓";
+  color: #667eea;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  font-size: 1.1rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 480px) {
+  .desktop-view,
+  .mobile-view {
+    padding: 20px 15px;
+  }
+
+  .qr-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .qr-box {
+    padding: 20px;
+  }
+
+  .mobile-view h1 {
+    font-size: 1.5rem;
+  }
+
+  .app-icon {
+    font-size: 3rem;
+  }
+
+  .download-btn,
+  .open-btn {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .desktop-view {
+    max-width: 700px;
+    padding: 50px;
+  }
+
+  .qr-box {
+    padding: 40px;
+  }
+
+  .qr-container h1 {
+    font-size: 2.5rem;
+  }
+}

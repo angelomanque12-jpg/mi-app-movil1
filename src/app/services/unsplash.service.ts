@@ -118,21 +118,21 @@ export class UnsplashService {
 
   // Lista de coordenadas de lugares famosos para usar cuando Unsplash no tenga datos de ubicación
   private readonly FAMOUS_LOCATIONS = [
-    { name: 'Torres del Paine', country: 'Chile', lat: -50.9423, lng: -73.4068, tags: ['patagonia', 'mountains', 'chile'] },
-    { name: 'Machu Picchu', country: 'Peru', lat: -13.1631, lng: -72.5450, tags: ['peru', 'andes', 'ruins'] },
-    { name: 'Salar de Uyuni', country: 'Bolivia', lat: -20.1338, lng: -67.4891, tags: ['salt', 'desert', 'bolivia'] },
-    { name: 'Iguazu Falls', country: 'Argentina', lat: -25.6953, lng: -54.4367, tags: ['waterfall', 'jungle', 'argentina'] },
-    { name: 'Atacama Desert', country: 'Chile', lat: -24.5000, lng: -69.2500, tags: ['desert', 'chile', 'astronomy'] },
-    { name: 'Bariloche', country: 'Argentina', lat: -41.1335, lng: -71.3103, tags: ['lakes', 'mountains', 'argentina'] },
-    { name: 'Galápagos Islands', country: 'Ecuador', lat: -0.9538, lng: -90.9656, tags: ['islands', 'wildlife', 'ecuador'] },
-    { name: 'Angel Falls', country: 'Venezuela', lat: 5.9692, lng: -62.5362, tags: ['waterfall', 'jungle', 'venezuela'] },
-    { name: 'Fernando de Noronha', country: 'Brazil', lat: -3.8536, lng: -32.4297, tags: ['beach', 'island', 'brazil'] },
-    { name: 'Perito Moreno Glacier', country: 'Argentina', lat: -50.4698, lng: -73.0306, tags: ['glacier', 'patagonia', 'argentina'] },
-    { name: 'Milford Sound', country: 'New Zealand', lat: -44.6700, lng: 167.9250, tags: ['fjord', 'mountains', 'newzealand'] },
-    { name: 'Mont Blanc', country: 'France', lat: 45.8326, lng: 6.8652, tags: ['mountains', 'alps', 'france'] },
-    { name: 'Banff National Park', country: 'Canada', lat: 51.4968, lng: -115.9281, tags: ['mountains', 'lakes', 'canada'] },
-    { name: 'Santorini', country: 'Greece', lat: 36.3932, lng: 25.4615, tags: ['islands', 'sunset', 'greece'] },
-    { name: 'Yosemite Valley', country: 'USA', lat: 37.7455, lng: -119.5936, tags: ['valley', 'mountains', 'usa'] }
+    { name: 'Torres del Paine', country: 'Chile', lat: -50.9423, lng: -73.4068, tags: ['patagonia', 'mountains', 'chile'], imageUrl: 'https://torresdelpaine.com/wp-content/uploads/sites/6/2025/08/torres-del-paine-2-dias-600x338.jpg', thumbUrl: 'https://torresdelpaine.com/wp-content/uploads/sites/6/2025/08/torres-del-paine-2-dias-600x338.jpg' },
+    { name: 'Machu Picchu', country: 'Peru', lat: -13.1631, lng: -72.5450, tags: ['peru', 'andes', 'ruins'], imageUrl: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Salar de Uyuni', country: 'Bolivia', lat: -20.1338, lng: -67.4891, tags: ['salt', 'desert', 'bolivia'], imageUrl: 'https://imagenes.elpais.com/resizer/v2/MGN6UNRGHZEBLHKLUR6ASE4XZY.jpg?auth=4725b0113426c6cdc68ee70519927437d2736ea989f93209fbb32e2797a1c19d&width=1960&height=1470&focal=2473%2C2062', thumbUrl: 'https://imagenes.elpais.com/resizer/v2/MGN6UNRGHZEBLHKLUR6ASE4XZY.jpg?auth=4725b0113426c6cdc68ee70519927437d2736ea989f93209fbb32e2797a1c19d&width=1960&height=1470&focal=2473%2C2062' },
+    { name: 'Cataratas del Iguazú', country: 'Argentina', lat: -25.6953, lng: -54.4367, tags: ['waterfall', 'jungle', 'argentina'], imageUrl: 'https://gpsviajes.com.ar/inicio/wp-content/uploads/2021/08/cataratas-iguazu-panoramica.jpeg', thumbUrl: 'https://gpsviajes.com.ar/inicio/wp-content/uploads/2021/08/cataratas-iguazu-panoramica.jpeg' },
+    { name: 'Atacama Desert', country: 'Chile', lat: -24.5000, lng: -69.2500, tags: ['desert', 'chile', 'astronomy'], imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Bariloche', country: 'Argentina', lat: -41.1335, lng: -71.3103, tags: ['lakes', 'mountains', 'argentina'], imageUrl: 'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1542401886-65d6c61db217?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Galápagos Islands', country: 'Ecuador', lat: -0.9538, lng: -90.9656, tags: ['islands', 'wildlife', 'ecuador'], imageUrl: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Cataratas del Ángel', country: 'Venezuela', lat: 5.9692, lng: -62.5362, tags: ['waterfall', 'jungle', 'venezuela'], imageUrl: 'https://www.journeylatinamerica.com/app/uploads/destinations/venezuela/angel-falls-and-the-gran-sabana/ven_angelfalls_shutterstock_141881491-scaled-1024x683-c-center.jpg', thumbUrl: 'https://www.journeylatinamerica.com/app/uploads/destinations/venezuela/angel-falls-and-the-gran-sabana/ven_angelfalls_shutterstock_141881491-scaled-1024x683-c-center.jpg' },
+    { name: 'Fernando de Noronha', country: 'Brazil', lat: -3.8536, lng: -32.4297, tags: ['beach', 'island', 'brazil'], imageUrl: 'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Perito Moreno Glacier', country: 'Argentina', lat: -50.4698, lng: -73.0306, tags: ['glacier', 'patagonia', 'argentina'], imageUrl: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Milford Sound', country: 'New Zealand', lat: -44.6700, lng: 167.9250, tags: ['fjord', 'mountains', 'newzealand'], imageUrl: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Mont Blanc', country: 'France', lat: 45.8326, lng: 6.8652, tags: ['mountains', 'alps', 'france'], imageUrl: 'https://images.unsplash.com/photo-1464822759844-d150ad6bf55c?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1464822759844-d150ad6bf55c?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Banff National Park', country: 'Canada', lat: 51.4968, lng: -115.9281, tags: ['mountains', 'lakes', 'canada'], imageUrl: 'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=300&h=200&fit=crop&auto=format&q=80' },
+    { name: 'Santorini', country: 'Greece', lat: 36.3932, lng: 25.4615, tags: ['islands', 'sunset', 'greece'], imageUrl: 'https://www.marriott.com/content/dam/marriott-digital/destinations/destinationheroimages/en_us/photo/assets/pdt-grc-santorini-587986249568062.jpg', thumbUrl: 'https://www.marriott.com/content/dam/marriott-digital/destinations/destinationheroimages/en_us/photo/assets/pdt-grc-santorini-587986249568062.jpg' },
+    { name: 'Yosemite Valley', country: 'USA', lat: 37.7455, lng: -119.5936, tags: ['valley', 'mountains', 'usa'], imageUrl: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80', thumbUrl: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&auto=format&q=80' }
   ];
 
   constructor(private http: HttpClient) {}
@@ -298,14 +298,14 @@ export class UnsplashService {
   private getMockLandscapes(): Observable<ProcessedLandscape[]> {
     // URLs reales de Unsplash para cada ubicación
     const realImageUrls = [
-      // Torres del Paine - Chile (URL confiable - paisaje de montañas)
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80',
+      // Torres del Paine - Chile
+      'https://torresdelpaine.com/wp-content/uploads/sites/6/2025/08/torres-del-paine-2-dias-600x338.jpg',
       // Machu Picchu - Peru
       'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&h=600&fit=crop&auto=format&q=80',
-      // Salar de Uyuni - Bolivia (URL mejorada)
-      'https://images.unsplash.com/photo-1625662555790-d94c87635bf3?w=800&h=600&fit=crop&auto=format&q=80',
+      // Salar de Uyuni - Bolivia
+      'https://imagenes.elpais.com/resizer/v2/MGN6UNRGHZEBLHKLUR6ASE4XZY.jpg?auth=4725b0113426c6cdc68ee70519927437d2736ea989f93209fbb32e2797a1c19d&width=1960&height=1470&focal=2473%2C2062',
       // Cataratas del Iguazú - Argentina
-      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&auto=format&q=80',
+      'https://gpsviajes.com.ar/inicio/wp-content/uploads/2021/08/cataratas-iguazu-panoramica.jpeg',
       // Desierto de Atacama - Chile
       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80',
       // Valle de la Luna - Chile  
@@ -320,27 +320,27 @@ export class UnsplashService {
       'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&h=600&fit=crop&auto=format&q=80',
       // Valle del Cocora - Colombia
       'https://images.unsplash.com/photo-1574263867128-3cfb3d71b55a?w=800&h=600&fit=crop&auto=format&q=80',
-      // Fernando de Noronha - Brasil (URL mejorada)
+      // Fernando de Noronha - Brasil
       'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=800&h=600&fit=crop&auto=format&q=80',
       // Lençóis Maranhenses - Brasil
       'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop&auto=format&q=80',
-      // Milford Sound - Nueva Zelanda (URL mejorada)
-      'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800&h=600&fit=crop&auto=format&q=80',
-      // Mont Blanc - Francia/Italia (URL mejorada)
+      // Cataratas del Ángel - Venezuela
+      'https://www.journeylatinamerica.com/app/uploads/destinations/venezuela/angel-falls-and-the-gran-sabana/ven_angelfalls_shutterstock_141881491-scaled-1024x683-c-center.jpg',
+      // Mont Blanc - Francia/Italia
       'https://images.unsplash.com/photo-1464822759844-d150ad6bf55c?w=800&h=600&fit=crop&auto=format&q=80',
-      // Santorini - Grecia (URL mejorada)
-      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&h=600&fit=crop&auto=format&q=80'
+      // Santorini - Grecia
+      'https://www.marriott.com/content/dam/marriott-digital/destinations/destinationheroimages/en_us/photo/assets/pdt-grc-santorini-587986249568062.jpg'
     ];
 
     const realThumbnailUrls = [
-      // Torres del Paine - Chile (URL confiable - paisaje de montañas)
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80',
+      // Torres del Paine - Chile
+      'https://torresdelpaine.com/wp-content/uploads/sites/6/2025/08/torres-del-paine-2-dias-600x338.jpg',
       // Machu Picchu - Peru
       'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=300&h=200&fit=crop&auto=format&q=80',
-      // Salar de Uyuni - Bolivia (URL mejorada)
-      'https://images.unsplash.com/photo-1625662555790-d94c87635bf3?w=300&h=200&fit=crop&auto=format&q=80',
+      // Salar de Uyuni - Bolivia
+      'https://imagenes.elpais.com/resizer/v2/MGN6UNRGHZEBLHKLUR6ASE4XZY.jpg?auth=4725b0113426c6cdc68ee70519927437d2736ea989f93209fbb32e2797a1c19d&width=1960&height=1470&focal=2473%2C2062',
       // Cataratas del Iguazú - Argentina
-      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop&auto=format&q=80',
+      'https://gpsviajes.com.ar/inicio/wp-content/uploads/2021/08/cataratas-iguazu-panoramica.jpeg',
       // Desierto de Atacama - Chile
       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80',
       // Valle de la Luna - Chile
@@ -355,24 +355,24 @@ export class UnsplashService {
       'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=300&h=200&fit=crop&auto=format&q=80',
       // Valle del Cocora - Colombia
       'https://images.unsplash.com/photo-1574263867128-3cfb3d71b55a?w=300&h=200&fit=crop&auto=format&q=80',
-      // Fernando de Noronha - Brasil (URL mejorada)
+      // Fernando de Noronha - Brasil
       'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=300&h=200&fit=crop&auto=format&q=80',
       // Lençóis Maranhenses - Brasil
       'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&auto=format&q=80',
-      // Milford Sound - Nueva Zelanda (URL mejorada)
-      'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=300&h=200&fit=crop&auto=format&q=80',
-      // Mont Blanc - Francia/Italia (URL mejorada)
+      // Cataratas del Ángel - Venezuela
+      'https://www.journeylatinamerica.com/app/uploads/destinations/venezuela/angel-falls-and-the-gran-sabana/ven_angelfalls_shutterstock_141881491-scaled-1024x683-c-center.jpg',
+      // Mont Blanc - Francia/Italia
       'https://images.unsplash.com/photo-1464822759844-d150ad6bf55c?w=300&h=200&fit=crop&auto=format&q=80',
-      // Santorini - Grecia (URL mejorada)
-      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=300&h=200&fit=crop&auto=format&q=80'
+      // Santorini - Grecia
+      'https://www.marriott.com/content/dam/marriott-digital/destinations/destinationheroimages/en_us/photo/assets/pdt-grc-santorini-587986249568062.jpg'
     ];
 
     const mockLandscapes: ProcessedLandscape[] = this.FAMOUS_LOCATIONS.map((location, index) => ({
       id: `mock-${index}`,
       title: location.name,
       description: `Hermoso paisaje natural ubicado en ${location.country}. Un destino imperdible para los amantes de la naturaleza y la fotografía.`,
-      imageUrl: realImageUrls[index] || realImageUrls[0],
-      thumbnailUrl: realThumbnailUrls[index] || realThumbnailUrls[0],
+      imageUrl: (location as any).imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&auto=format&q=80',
+      thumbnailUrl: (location as any).thumbUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80',
       photographer: 'Fotógrafo Profesional',
       photographerUrl: 'https://unsplash.com/@photographer',
       unsplashUrl: 'https://unsplash.com/photos/photo-id',
