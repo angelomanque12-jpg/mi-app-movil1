@@ -4,8 +4,8 @@ import { authGuard } from './guards/auth.guard';
 import { initGuard } from './guards/init.guard';
 
 const routes: Routes = [
-  // Flujo principal: Login primero si no está autenticado
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Flujo principal: Descarga de APK primero (sin autenticación requerida)
+  { path: '', redirectTo: 'download', pathMatch: 'full' },
   
   // Página de descarga de APK (sin autenticación requerida)
   { path: 'download', loadComponent: () => import('./pages/download/download.page').then(m => m.DownloadPage) },

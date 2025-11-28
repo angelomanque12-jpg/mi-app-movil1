@@ -23,7 +23,7 @@ export class DownloadPage implements OnInit, AfterViewInit {
   
   isMobile = false;
   qrValue = '';
-  apkDownloadUrl = 'assets/apk/app.apk'; // Cambiar por la URL real del APK
+  apkDownloadUrl = 'assets/apk/app-debug.apk'; // APK descargable
   
   constructor() {
     this.detectDevice();
