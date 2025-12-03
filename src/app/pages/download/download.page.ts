@@ -1,7 +1,6 @@
-import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonButton, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
-import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'app-download',
@@ -17,103 +16,60 @@ import * as QRCode from 'qrcode';
   templateUrl: './download.page.html',
   styleUrls: ['./download.page.scss']
 })
-export class DownloadPage implements OnInit, AfterViewInit {
-  
-  @ViewChild('qrCanvas', { static: false }) qrCanvas!: ElementRef<HTMLCanvasElement>;
+export class DownloadPage implements OnInit {
   
   isMobile = false;
-  qrValue = '';
-  apkDownloadUrl = 'assets/apk/app-debug.apk'; // APK descargable
-  
-  constructor() {
+  apkDownloadUrl = 'assets/apk/app-debug.apk';
+  downloadStarted = false;
+  qrCodeUrl = '';
+  downloadPageUrl = '';
+
+  ngOnInit() {
     this.detectDevice();
+    this.generateQRCode();
     window.addEventListener('resize', () => this.detectDevice());
   }
 
-  ngOnInit() {
-    // Generar valor del QR basado en la URL actual
-    const currentUrl = window.location.origin;
-    this.qrValue = `${currentUrl}/download`;
-  }
-
-  ngAfterViewInit() {
-    // Generar QR después de que la vista se inicialice
-    if (this.qrCanvas && !this.isMobile) {
-      this.generateQRCode();
-    }
-  }
-
-  /**
-   * Genera el código QR en el canvas
-   */
-  generateQRCode() {
-    try {
-      QRCode.toCanvas(
-        this.qrCanvas.nativeElement,
-        this.qrValue,
-        {
-          errorCorrectionLevel: 'H',
-          width: 300,
-          margin: 10,
-          color: {
-            dark: '#000000',
-            light: '#FFFFFF'
-          }
-        },
-        (error: Error | null | undefined) => {
-          if (error) {
-            console.error('Error generando QR:', error);
-          } else {
-            console.log('✅ QR generado exitosamente');
-          }
-        }
-      );
-    } catch (error) {
-      console.error('Error al generar QR:', error);
-    }
-  }
-
-  /**
-   * Detecta si el dispositivo es móvil o PC
-   */
   detectDevice() {
-    const userAgent = navigator.userAgent;
-    
-    // Expresión regular para detectar dispositivos móviles
-    const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-    
-    this.isMobile = mobileRegex.test(userAgent) && window.innerWidth <= 768;
-    
-    console.log(`📱 Dispositivo detectado: ${this.isMobile ? 'Móvil' : 'PC'}`);
+    const userAgent = navigator.userAgent.toLowerCase();
+    const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+    this.isMobile = mobileRegex.test(userAgent);
   }
 
-  /**
-   * Inicia la descarga del APK en dispositivos móviles
-   */
-  downloadAPK() {
-    console.log('📥 Iniciando descarga del APK...');
+  generateQRCode() {
+    // URL de la página de descarga
+    this.downloadPageUrl = window.location.href;
     
-    // Crear un enlace temporal para descargar
+    // Generar QR usando API externa
+    const encodedURL = encodeURIComponent(this.downloadPageUrl);
+    this.qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodedURL}`;
+  }
+
+  downloadAPK() {
+    this.downloadStarted = true;
     const link = document.createElement('a');
     link.href = this.apkDownloadUrl;
-    link.download = 'app.apk';
-    link.target = '_blank';
-    
-    // Agregar el enlace al DOM y hacer clic
+    link.download = 'app-debug.apk';
     document.body.appendChild(link);
     link.click();
-    
-    // Limpiar
     document.body.removeChild(link);
+    setTimeout(() => this.downloadStarted = false, 3000);
   }
 
-  /**
-   * Abre el APK directamente en Android
-   */
-  openAPKDirect() {
-    console.log('📱 Abriendo APK directamente...');
-    
-    // Intenta abrir el APK directamente (solo funciona en Android con permisos)
+  openAPK() {
     window.location.href = this.apkDownloadUrl;
+  }
+
+  copyDownloadLink() {
+    const url = window.location.origin + '/' + this.apkDownloadUrl;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Enlace copiado al portapapeles');
+    });
+  }
+
+  copyQRLink() {
+    navigator.clipboard.writeText(this.downloadPageUrl).then(() => {
+      alert('URL del QR copiada al portapapeles');
+    });
   }
 }

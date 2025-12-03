@@ -1,65 +1,106 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Descargar APK</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Descargar Aplicación</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="download-container">
-  <!-- Vista para PC: Mostrar QR -->
-  <div *ngIf="!isMobile" class="desktop-view">
-    <div class="qr-container">
-      <h1>📱 Escanea el código QR</h1>
-      <p>Usa tu dispositivo móvil para escanear y descargar la aplicación</p>
-      
-      <div class="qr-box">
-        <canvas #qrCanvas></canvas>
-      </div>
-      
-      <div class="instructions">
-        <h3>Instrucciones:</h3>
-        <ol>
-          <li>Abre la cámara de tu teléfono</li>
-          <li>Escanea este código QR</li>
-          <li>Sigue el enlace para descargar</li>
-        </ol>
-      </div>
+<ion-content class="ion-padding">
+  <!-- Vista para Móvil -->
+  <div *ngIf="isMobile" class="mobile-download">
+    <div class="download-icon">📲</div>
+    
+    <h1>Descarga la Aplicación</h1>
+    <p class="subtitle">Acceso a todas las funcionalidades desde tu dispositivo</p>
+
+    <ion-button 
+      expand="block" 
+      size="large" 
+      class="download-btn"
+      (click)="downloadAPK()">
+      📥 Descargar APK (8.6 MB)
+    </ion-button>
+
+    <ion-button 
+      expand="block" 
+      fill="outline"
+      (click)="openAPK()">
+      📱 Abrir Instalador
+    </ion-button>
+
+    <div *ngIf="downloadStarted" class="status-message">
+      ✅ ¡Descarga iniciada! Revisa tu carpeta de descargas.
+    </div>
+
+    <div class="info-box">
+      <h3>Requisitos del Sistema:</h3>
+      <ul>
+        <li>Android 5.0 o superior</li>
+        <li>50 MB de espacio disponible</li>
+        <li>Conexión a Internet activa</li>
+      </ul>
+    </div>
+
+    <div class="info-box secondary">
+      <p><strong>Tamaño del archivo:</strong> 8.6 MB</p>
+      <p><strong>Versión:</strong> 1.0</p>
+      <p><strong>Última actualización:</strong> 28 de Noviembre, 2025</p>
     </div>
   </div>
 
-  <!-- Vista para Móvil: Mostrar botón de descarga -->
-  <div *ngIf="isMobile" class="mobile-view">
-    <div class="download-box">
-      <div class="app-icon">
-        📲
+  <!-- Vista para PC/Desktop -->
+  <div *ngIf="!isMobile" class="desktop-download">
+    <div class="download-icon">🖥️</div>
+    
+    <h1>Descarga para Dispositivos Móviles</h1>
+    <p class="subtitle">Escanea el código QR con tu celular para descargar la aplicación</p>
+
+    <!-- QR CODE SECTION -->
+    <div class="qr-section" *ngIf="qrCodeUrl">
+      <div class="qr-box">
+        <img [src]="qrCodeUrl" alt="QR Code" class="qr-image">
       </div>
-      
-      <h1>Descarga la Aplicación</h1>
-      <p>Acceso rápido a todas las funcionalidades</p>
-      
-      <ion-button 
-        expand="block" 
-        size="large" 
-        class="download-btn"
-        (click)="downloadAPK()">
-        <span>📥 Descargar APK</span>
-      </ion-button>
-      
+      <p class="qr-label">Escanea este código QR con tu celular</p>
       <ion-button 
         expand="block" 
         fill="outline"
-        class="open-btn"
-        (click)="openAPKDirect()">
-        <span>📱 Abrir directamente</span>
+        size="small"
+        (click)="copyQRLink()">
+        📋 Copiar URL del QR
       </ion-button>
-      
-      <div class="requirements">
-        <h3>Requisitos:</h3>
-        <ul>
-          <li>Android 5.0 o superior</li>
-          <li>50 MB de espacio disponible</li>
-          <li>Conexión a Internet</li>
-        </ul>
+    </div>
+
+    <!-- ALTERNATIVE LINK -->
+    <div class="divider">ó</div>
+
+    <div class="link-box">
+      <h3>O abre este enlace en tu móvil:</h3>
+      <div class="copy-link">
+        <a [href]="downloadPageUrl" class="download-link">
+          {{ downloadPageUrl }}
+        </a>
+        <button class="copy-btn" (click)="copyDownloadLink()">📋 Copiar</button>
       </div>
+    </div>
+
+    <!-- DIRECT DOWNLOAD -->
+    <ion-button 
+      expand="block" 
+      size="large"
+      [href]="apkDownloadUrl"
+      download="app-debug.apk">
+      📥 Descargar APK Directamente (8.6 MB)
+    </ion-button>
+
+    <div class="info-box">
+      <h3>Instrucciones de Instalación:</h3>
+      <ol>
+        <li>Escanea el código QR con tu teléfono Android</li>
+        <li>O abre el enlace desde tu dispositivo móvil</li>
+        <li>Se descargará el archivo APK</li>
+        <li>Una vez descargado, toca el archivo para instalar</li>
+        <li>Acepta los permisos requeridos</li>
+        <li>¡Listo! La aplicación se instalará en tu dispositivo</li>
+      </ol>
     </div>
   </div>
 </ion-content>
